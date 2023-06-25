@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Just Share Please</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=JetBrains+Mono&display=swap">
+    <link rel="icon" href="favicon.ico">
+
+    <style>
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        code {
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+
+        .content {
+            max-width: 700px;
+            margin: 40px auto 80px;
+        }
+
+        #footer {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 40px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        @media (prefers-color-scheme: dark) {
+
+            body {
+                color: #d8d8d8;
+                background-color: #1b1b1b;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div id="main">
+            <script>
+                let main = $("#main");
+
+                $(window).on("hashchange", display);
+                display();
+
+                function display() {
+                    let hash = window.location.hash;
+                    if (hash.startsWith("#"))
+                        hash = hash.substring(1);
+                    $.ajax({
+                        dataType: "text",
+                        url: `${hash}.md`,
+                        success: t => {
+                            let converter = new showdown.Converter({
+                                simplifiedAutoLink: true,
+                                strikethrough: true,
+                                tables: true,
+                                tasklists: true,
+                                metadata: true
+                            });
+                            main.html(converter.makeHtml(t));
+                        },
+                        // TODO display this error more nicely
+                        error: (r, s, e) => main.html(e)
+                    });
+                }
+            </script>
+        </div>
+        <div id="footer">
+            Created using <a href="https://github.com/Ellpeck/ObsidianJustSharePlease">Just Share Please</a> for <a href="https://obsidian.md">Obsidian</a>
+        </div>
+    </div>
+</body>
+
+</html>
