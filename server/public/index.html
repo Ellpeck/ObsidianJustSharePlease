@@ -73,9 +73,8 @@
                     if (hash.startsWith("#"))
                         hash = hash.substring(1);
                     $.ajax({
-                        // TODO change this to use GET request on share.php rather than trying to get the file directly (which is in ../data and inaccessible!)
-                        dataType: "text",
-                        url: `${hash}.md`,
+                        method: "get",
+                        url: `share.php?file=${hash}.md`,
                         success: t => {
                             let converter = new showdown.Converter({
                                 simplifiedAutoLink: true,
