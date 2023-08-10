@@ -9,7 +9,6 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             echo "Not found";
             break;
         }
-        header("Content-Type: text/plain");
         echo $content;
         break;
     case "POST":
