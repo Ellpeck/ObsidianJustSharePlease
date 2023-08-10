@@ -74,7 +74,7 @@
                         hash = hash.substring(1);
                     $.ajax({
                         method: "get",
-                        url: `share.php?file=${hash}.md`,
+                        url: `share.php?id=${hash}`,
                         success: t => {
                             let converter = new showdown.Converter({
                                 simplifiedAutoLink: true,
