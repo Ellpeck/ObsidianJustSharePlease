@@ -23,8 +23,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
         try {
             // generate id and deletion/edit password
-            $id = random_int(0, 65535);
-            $password = random_int(32, PHP_INT_MAX);
+            $id = bin2hex(random_bytes(4));
+            $password = bin2hex(random_bytes(16));
         } catch (Exception $e) {
             http_response_code(500);
             echo $e->getMessage();
