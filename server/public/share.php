@@ -14,7 +14,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
     case "POST":
         $body = json_decode(file_get_contents("php://input"), true);
-        $content = $body ? $body["content"] : null;
+        $content = $body["content"];
         if (!$content) {
             http_response_code(400);
             echo "No content";
@@ -45,7 +45,26 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     case "PATCH":
         // TODO update using PATCH
     case "DELETE":
-        
+        parse_str($_SERVER["QUERY_STRING"], $query);
+        $id = $query["id"];
+        $password = $_SERVER["HTTP_PASSWORD"];
+        if (!$id || !$password) {
+            http_response_code(400);
+            echo "No id or password";
+            break;
+        }
+
+        // check deletion password match
+        $meta = json_decode(file_get_contents(get_meta_path($id)), true);
+        if ($password != $meta["deletion_password"]) {
+            http_response_code(401);
+            echo "Unauthorized";
+            break;
+        }
+
+        // delete content and meta
+        unlink(get_markdown_path($id));
+        unlink(get_meta_path($id));
         break;
 }
 
