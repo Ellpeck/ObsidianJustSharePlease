@@ -1,5 +1,7 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
+
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
         handle_get();
@@ -13,12 +15,15 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     case "DELETE":
         handle_delete();
         break;
+    default:
+        http_response_code(405);
+        echo "Unsupported method";
 }
 
 function handle_get(): void {
     parse_str($_SERVER["QUERY_STRING"], $query);
     $content = file_get_contents(get_markdown_path($query["id"]));
-    if (!$content) {
+    if ($content === false) {
         http_response_code(404);
         echo "Not found";
         return;
@@ -28,7 +33,7 @@ function handle_get(): void {
 
 function handle_post(): void {
     $content = get_markdown_content();
-    if (!$content)
+    if ($content === null)
         return;
 
     try {
@@ -43,7 +48,7 @@ function handle_post(): void {
 
     $meta = json_encode([
         "id" => $id,
-        "deletion_password" => $password
+        "password" => $password
     ]);
 
     // store markdown and metadata in data path
@@ -56,7 +61,7 @@ function handle_post(): void {
 function handle_patch(): void {
     $info = get_patch_delete_info();
     $content = get_markdown_content();
-    if (!$info || !$content)
+    if (!$info || $content === null)
         return;
     [$id, $password] = $info;
     if (!check_password($id, $password))
@@ -80,7 +85,7 @@ function handle_delete(): void {
 
 function check_password(string $id, string $password): bool {
     $meta = json_decode(file_get_contents(get_meta_path($id)), true);
-    if ($password != $meta["deletion_password"]) {
+    if ($password != $meta["password"]) {
         http_response_code(401);
         echo "Unauthorized";
         return false;
@@ -100,14 +105,14 @@ function get_patch_delete_info(): ?array {
     return [$id, $password];
 }
 
-function get_markdown_content(): string {
+function get_markdown_content(): ?string {
     $body = json_decode(file_get_contents("php://input"), true);
-    $content = $body["content"];
-    if (!$content) {
+    if (!array_key_exists("content", $body)) {
         http_response_code(400);
         echo "No content";
+        return null;
     }
-    return $content;
+    return $body["content"];
 }
 
 function get_markdown_path(string $id): string {
