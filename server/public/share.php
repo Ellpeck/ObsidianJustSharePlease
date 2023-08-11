@@ -2,69 +2,112 @@
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
-        parse_str($_SERVER["QUERY_STRING"], $query);
-        $content = file_get_contents(get_markdown_path($query["id"]));
-        if (!$content) {
-            http_response_code(404);
-            echo "Not found";
-            break;
-        }
-        echo $content;
+        handle_get();
         break;
     case "POST":
-        $body = json_decode(file_get_contents("php://input"), true);
-        $content = $body["content"];
-        if (!$content) {
-            http_response_code(400);
-            echo "No content";
-            break;
-        }
-
-        try {
-            // generate id and deletion/edit password
-            $id = bin2hex(random_bytes(4));
-            $password = bin2hex(random_bytes(16));
-        } catch (Exception $e) {
-            http_response_code(500);
-            echo $e->getMessage();
-            break;
-        }
-
-        $meta = json_encode([
-            "id" => $id,
-            "deletion_password" => $password
-        ]);
-
-        // store markdown and metadata in data path
-        file_put_contents(get_markdown_path($id), $content);
-        file_put_contents(get_meta_path($id), $meta);
-
-        echo $meta;
+        handle_post();
         break;
     case "PATCH":
-        // TODO update using PATCH
-    case "DELETE":
-        parse_str($_SERVER["QUERY_STRING"], $query);
-        $id = $query["id"];
-        $password = $_SERVER["HTTP_PASSWORD"];
-        if (!$id || !$password) {
-            http_response_code(400);
-            echo "No id or password";
-            break;
-        }
-
-        // check deletion password match
-        $meta = json_decode(file_get_contents(get_meta_path($id)), true);
-        if ($password != $meta["deletion_password"]) {
-            http_response_code(401);
-            echo "Unauthorized";
-            break;
-        }
-
-        // delete content and meta
-        unlink(get_markdown_path($id));
-        unlink(get_meta_path($id));
+        handle_patch();
         break;
+    case "DELETE":
+        handle_delete();
+        break;
+}
+
+function handle_get(): void {
+    parse_str($_SERVER["QUERY_STRING"], $query);
+    $content = file_get_contents(get_markdown_path($query["id"]));
+    if (!$content) {
+        http_response_code(404);
+        echo "Not found";
+        return;
+    }
+    echo $content;
+}
+
+function handle_post(): void {
+    $content = get_markdown_content();
+    if (!$content)
+        return;
+
+    try {
+        // generate id and deletion/edit password
+        $id = bin2hex(random_bytes(4));
+        $password = bin2hex(random_bytes(16));
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo $e->getMessage();
+        return;
+    }
+
+    $meta = json_encode([
+        "id" => $id,
+        "deletion_password" => $password
+    ]);
+
+    // store markdown and metadata in data path
+    file_put_contents(get_markdown_path($id), $content);
+    file_put_contents(get_meta_path($id), $meta);
+
+    echo $meta;
+}
+
+function handle_patch(): void {
+    $info = get_patch_delete_info();
+    $content = get_markdown_content();
+    if (!$info || !$content)
+        return;
+    [$id, $password] = $info;
+    if (!check_password($id, $password))
+        return;
+
+    file_put_contents(get_markdown_path($id), $content);
+}
+
+function handle_delete(): void {
+    $info = get_patch_delete_info();
+    if (!$info)
+        return;
+    [$id, $password] = $info;
+    if (!check_password($id, $password))
+        return;
+
+    // delete content and meta
+    unlink(get_markdown_path($id));
+    unlink(get_meta_path($id));
+}
+
+function check_password(string $id, string $password): bool {
+    $meta = json_decode(file_get_contents(get_meta_path($id)), true);
+    if ($password != $meta["deletion_password"]) {
+        http_response_code(401);
+        echo "Unauthorized";
+        return false;
+    }
+    return true;
+}
+
+function get_patch_delete_info(): ?array {
+    parse_str($_SERVER["QUERY_STRING"], $query);
+    $id = $query["id"];
+    $password = $_SERVER["HTTP_PASSWORD"];
+    if (!$id || !$password) {
+        http_response_code(400);
+        echo "No id or password";
+        return null;
+    }
+    return [$id, $password];
+}
+
+function get_markdown_content(): string {
+    $body = json_decode(file_get_contents("php://input"), true);
+    $content = $body["content"];
+    if (!$content) {
+        http_response_code(400);
+        echo "No content";
+    }
+    return $content;
 }
 
 function get_markdown_path(string $id): string {
