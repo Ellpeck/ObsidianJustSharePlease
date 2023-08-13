@@ -46,6 +46,14 @@ a:hover {
     margin: 40px auto 80px;
 }
 
+.error {
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -60%);
+}
+
 #footer {
     position: absolute;
     left: 0;

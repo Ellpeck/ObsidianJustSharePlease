@@ -27,10 +27,16 @@
     <div class="content">
         <div id="main">
             <script>
+                marked.use(markedKatex());
+                marked.use(markedHighlight.markedHighlight({
+                    langPrefix: "hljs language-",
+                    highlight: (c, l) => {
+                        const language = hljs.getLanguage(l) ? l : "plaintext";
+                        return hljs.highlight(c, {language}).value;
+                    }
+                }));
+
                 let main = $("#main");
-
-                // TODO display nice message when there is no hash
-
                 $(window).on("hashchange", display);
                 display();
 
@@ -40,20 +46,9 @@
                         hash = hash.substring(1);
                     $.ajax({
                         method: "get",
-                        url: `share.php?id=${hash}`,
-                        success: t => {
-                            marked.use(markedKatex());
-                            marked.use(markedHighlight.markedHighlight({
-                                langPrefix: "hljs language-",
-                                highlight: (c, l) => {
-                                    const language = hljs.getLanguage(l) ? l : "plaintext";
-                                    return hljs.highlight(c, {language}).value;
-                                }
-                            }));
-                            main.html(DOMPurify.sanitize(marked.parse(t)));
-                        },
-                        // TODO display this error more nicely
-                        error: (r, s, e) => main.html(e)
+                        url: hash ? `share.php?id=${hash}` : "index.md",
+                        success: t => main.html(DOMPurify.sanitize(marked.parse(t))),
+                        error: (r, s, e) => main.html(`<div class="error"><p>Error loading shared note with id <code>${hash}</code>: ${e}</p><p><a href="#">Home</a></p></div>`)
                     });
                 }
             </script>
