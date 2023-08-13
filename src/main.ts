@@ -4,7 +4,7 @@ import {JSPSettingsTab} from "./settings-tab";
 
 export default class JustSharePleasePlugin extends Plugin {
 
-    // TODO allow deleting uploads whose local files have been deleted (through command?)
+    // TODO panel that displays all shares, including ones for removed files, and allows unsharing or updating them
     // TODO add a setting for auto-refreshing uploads when saving
     // TODO strip frontmatter before uploading? maybe optionally
     settings: JSPSettings;
@@ -17,76 +17,26 @@ export default class JustSharePleasePlugin extends Plugin {
             if (f instanceof TFile) {
                 let shared = this.settings.shared.find(i => i.path == f.path);
                 if (!shared) {
-                    // (newly) share a note
                     m.addItem(i => {
                         i.setTitle("Share to JSP");
                         i.setIcon("share");
-                        i.onClick(async () => {
-                            let response = await requestUrl({
-                                url: `${this.settings.url}/share.php`,
-                                method: "POST",
-                                body: JSON.stringify({content: await this.app.vault.cachedRead(f)}),
-                                throw: false
-                            });
-
-                            // TODO display message about status success/fail and copy URL to clipboard
-                            console.log(response.status + " " + response.text);
-
-                            if (response.status == 200) {
-                                shared = response.json;
-                                shared.path = f.path;
-                                this.settings.shared.push(shared);
-                                await this.saveSettings();
-                            }
-                        });
+                        i.onClick(async () => this.shareFile(f));
                     });
                 } else {
-                    // copy note link
                     m.addItem(i => {
                         i.setTitle("Copy JSP link");
                         i.setIcon("link");
-                        // TODO let people know this happened
-                        i.onClick(() => navigator.clipboard.writeText(`${this.settings.url}#${shared.id}`));
+                        i.onClick(() => this.copyShareLink(shared));
                     });
-
-                    // update
                     m.addItem(i => {
                         i.setTitle("Update in JSP");
                         i.setIcon("share");
-                        i.onClick(async () => {
-                            let response = await requestUrl({
-                                url: `${this.settings.url}/share.php?id=${shared.id}`,
-                                method: "PATCH",
-                                headers: {"Password": shared.password},
-                                body: JSON.stringify({content: await this.app.vault.cachedRead(f)}),
-                                throw: false
-                            });
-
-                            // TODO display message about status success/fail after updating
-                            console.log(response.status + " " + response.text);
-                        });
+                        i.onClick(() => this.updateFile(shared, f));
                     });
-
-                    // delete
                     m.addItem(i => {
                         i.setTitle("Delete from JSP");
                         i.setIcon("trash");
-                        i.onClick(async () => {
-                            let response = await requestUrl({
-                                url: `${this.settings.url}/share.php?id=${shared.id}`,
-                                method: "DELETE",
-                                headers: {"Password": shared.password},
-                                throw: false
-                            });
-
-                            // TODO display message about status success/fail when deleting
-                            console.log(response.status);
-
-                            if (response.status == 200) {
-                                this.settings.shared.remove(shared);
-                                await this.saveSettings();
-                            }
-                        });
+                        i.onClick(async () => this.deleteFile(shared));
                     });
                 }
             }
@@ -99,5 +49,62 @@ export default class JustSharePleasePlugin extends Plugin {
 
     async saveSettings(): Promise<void> {
         await this.saveData(this.settings);
+    }
+
+    async shareFile(file: TFile): Promise<SharedItem> {
+        let response = await requestUrl({
+            url: `${this.settings.url}/share.php`,
+            method: "POST",
+            body: JSON.stringify({content: await this.app.vault.cachedRead(file)}),
+            throw: false
+        });
+
+        // TODO display message about status success/fail and copy URL to clipboard
+        console.log(response.status + " " + response.text);
+
+        if (response.status == 200) {
+            let shared = response.json as SharedItem;
+            shared.path = file.path;
+            this.settings.shared.push(shared);
+            await this.saveSettings();
+            return shared;
+        }
+    }
+
+    async updateFile(item: SharedItem, file: TFile): Promise<boolean> {
+        let response = await requestUrl({
+            url: `${this.settings.url}/share.php?id=${item.id}`,
+            method: "PATCH",
+            headers: {"Password": item.password},
+            body: JSON.stringify({content: await this.app.vault.cachedRead(file)}),
+            throw: false
+        });
+
+        // TODO display message about status success/fail after updating
+        console.log(response.status + " " + response.text);
+        return response.status == 200;
+    }
+
+    async deleteFile(item: SharedItem): Promise<boolean> {
+        let response = await requestUrl({
+            url: `${this.settings.url}/share.php?id=${item.id}`,
+            method: "DELETE",
+            headers: {"Password": item.password},
+            throw: false
+        });
+
+        // TODO display message about status success/fail when deleting
+        console.log(response.status);
+
+        if (response.status == 200) {
+            this.settings.shared.remove(item);
+            await this.saveSettings();
+            return true;
+        }
+    }
+
+    async copyShareLink(item: SharedItem) {
+        // TODO let people know this happened
+        await navigator.clipboard.writeText(`${this.settings.url}#${item.id}`);
     }
 }

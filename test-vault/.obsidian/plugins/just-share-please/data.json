@@ -1,4 +1,10 @@
 {
   "url": "http://localhost:8080",
-  "shared": []
+  "shared": [
+    {
+      "id": "7dd626d1",
+      "password": "6253e1ab4b813dc08d52ee7c82b0990b",
+      "path": "Second note.md"
+    }
+  ]
 }
