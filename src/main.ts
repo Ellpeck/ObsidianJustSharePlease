@@ -42,6 +42,58 @@ export default class JustSharePleasePlugin extends Plugin {
                 }
             }
         }));
+
+        this.addCommand({
+            id: "share",
+            name: "Share current file to JSP",
+            editorCheckCallback: (checking, _, ctx) => {
+                if (!this.settings.shared.find(i => i.path == ctx.file.path)) {
+                    if (!checking)
+                        this.shareFile(ctx.file);
+                    return true;
+                }
+                return false;
+            }
+        });
+        this.addCommand({
+            id: "copy",
+            name: "Copy current file's JSP link",
+            editorCheckCallback: (checking, _, ctx) => {
+                let shared = this.settings.shared.find(i => i.path == ctx.file.path);
+                if (shared) {
+                    if (!checking)
+                        this.copyShareLink(shared);
+                    return true;
+                }
+                return false;
+            }
+        });
+        this.addCommand({
+            id: "update",
+            name: "Update current file in JSP",
+            editorCheckCallback: (checking, _, ctx) => {
+                let shared = this.settings.shared.find(i => i.path == ctx.file.path);
+                if (shared) {
+                    if (!checking)
+                        this.updateFile(shared, ctx.file);
+                    return true;
+                }
+                return false;
+            }
+        });
+        this.addCommand({
+            id: "delete",
+            name: "Delete current file from JSP",
+            editorCheckCallback: (checking, _, ctx) => {
+                let shared = this.settings.shared.find(i => i.path == ctx.file.path);
+                if (shared) {
+                    if (!checking)
+                        this.deleteFile(shared);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     async loadSettings(): Promise<void> {
@@ -112,7 +164,7 @@ export default class JustSharePleasePlugin extends Plugin {
 
             this.settings.shared.remove(item);
             await this.saveSettings();
-            
+
             return true;
         } catch (e) {
             new Notice(createFragment(f => {
