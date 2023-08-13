@@ -1,6 +1,7 @@
-import {Plugin, requestUrl, TFile} from "obsidian";
+import {Notice, Plugin, requestUrl, TFile} from "obsidian";
 import {defaultSettings, JSPSettings, SharedItem} from "./settings";
 import {JSPSettingsTab} from "./settings-tab";
+import {basename, extname} from "path";
 
 export default class JustSharePleasePlugin extends Plugin {
 
@@ -52,59 +53,79 @@ export default class JustSharePleasePlugin extends Plugin {
     }
 
     async shareFile(file: TFile): Promise<SharedItem> {
-        let response = await requestUrl({
-            url: `${this.settings.url}/share.php`,
-            method: "POST",
-            body: JSON.stringify({content: await this.app.vault.cachedRead(file)}),
-            throw: false
-        });
-
-        // TODO display message about status success/fail and copy URL to clipboard
-        console.log(response.status + " " + response.text);
-
-        if (response.status == 200) {
+        try {
+            let response = await requestUrl({
+                url: `${this.settings.url}/share.php`,
+                method: "POST",
+                body: JSON.stringify({content: await this.app.vault.cachedRead(file)})
+            });
             let shared = response.json as SharedItem;
             shared.path = file.path;
+
+            await this.copyShareLink(shared, false);
+            new Notice(`Successfully shared ${file.basename} and copied link to clipboard`);
+
             this.settings.shared.push(shared);
             await this.saveSettings();
+
             return shared;
+        } catch (e) {
+            new Notice(createFragment(f => {
+                f.createSpan({text: `There was an error sharing ${file.basename}: `});
+                f.createEl("code", {text: e});
+            }), 10000);
+            console.log(e);
         }
     }
 
-    async updateFile(item: SharedItem, file: TFile): Promise<boolean> {
-        let response = await requestUrl({
-            url: `${this.settings.url}/share.php?id=${item.id}`,
-            method: "PATCH",
-            headers: {"Password": item.password},
-            body: JSON.stringify({content: await this.app.vault.cachedRead(file)}),
-            throw: false
-        });
+    async updateFile(item: SharedItem, file: TFile, notice = true): Promise<boolean> {
+        try {
+            await requestUrl({
+                url: `${this.settings.url}/share.php?id=${item.id}`,
+                method: "PATCH",
+                headers: {"Password": item.password},
+                body: JSON.stringify({content: await this.app.vault.cachedRead(file)})
+            });
+            new Notice(`Successfully updated ${file.basename} on JSP`);
+            return true;
+        } catch (e) {
+            if (notice) {
+                new Notice(createFragment(f => {
+                    f.createSpan({text: `There was an error updating ${file.basename}: `});
+                    f.createEl("code", {text: e});
+                }), 10000);
+            }
+            console.log(e);
+        }
 
-        // TODO display message about status success/fail after updating
-        console.log(response.status + " " + response.text);
-        return response.status == 200;
     }
 
     async deleteFile(item: SharedItem): Promise<boolean> {
-        let response = await requestUrl({
-            url: `${this.settings.url}/share.php?id=${item.id}`,
-            method: "DELETE",
-            headers: {"Password": item.password},
-            throw: false
-        });
+        let name = basename(item.path, extname(item.path));
+        try {
+            await requestUrl({
+                url: `${this.settings.url}/share.php?id=${item.id}`,
+                method: "DELETE",
+                headers: {"Password": item.password}
+            });
+            new Notice(`Successfully deleted ${name} from JSP`);
 
-        // TODO display message about status success/fail when deleting
-        console.log(response.status);
-
-        if (response.status == 200) {
             this.settings.shared.remove(item);
             await this.saveSettings();
+            
             return true;
+        } catch (e) {
+            new Notice(createFragment(f => {
+                f.createSpan({text: `There was an error deleting ${name}: `});
+                f.createEl("code", {text: e});
+            }), 10000);
+            console.log(e);
         }
     }
 
-    async copyShareLink(item: SharedItem) {
-        // TODO let people know this happened
+    async copyShareLink(item: SharedItem, notice = true): Promise<void> {
         await navigator.clipboard.writeText(`${this.settings.url}#${item.id}`);
+        if (notice)
+            new Notice(`Copied link to ${basename(item.path, extname(item.path))} to clipboard`);
     }
 }
