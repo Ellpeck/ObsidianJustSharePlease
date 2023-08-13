@@ -16,7 +16,7 @@ export default class JustSharePleasePlugin extends Plugin {
 
         this.registerEvent(this.app.workspace.on("file-menu", async (m, f) => {
             if (f instanceof TFile) {
-                let shared = this.settings.shared.find(i => i.path == f.path);
+                let shared = this.getSharedItem(f);
                 if (!shared) {
                     m.addItem(i => {
                         i.setTitle("Share to JSP");
@@ -47,7 +47,7 @@ export default class JustSharePleasePlugin extends Plugin {
             id: "share",
             name: "Share current file to JSP",
             editorCheckCallback: (checking, _, ctx) => {
-                if (!this.settings.shared.find(i => i.path == ctx.file.path)) {
+                if (!this.getSharedItem(ctx.file)) {
                     if (!checking)
                         this.shareFile(ctx.file);
                     return true;
@@ -59,7 +59,7 @@ export default class JustSharePleasePlugin extends Plugin {
             id: "copy",
             name: "Copy current file's JSP link",
             editorCheckCallback: (checking, _, ctx) => {
-                let shared = this.settings.shared.find(i => i.path == ctx.file.path);
+                let shared = this.getSharedItem(ctx.file);
                 if (shared) {
                     if (!checking)
                         this.copyShareLink(shared);
@@ -72,7 +72,7 @@ export default class JustSharePleasePlugin extends Plugin {
             id: "update",
             name: "Update current file in JSP",
             editorCheckCallback: (checking, _, ctx) => {
-                let shared = this.settings.shared.find(i => i.path == ctx.file.path);
+                let shared = this.getSharedItem(ctx.file);
                 if (shared) {
                     if (!checking)
                         this.updateFile(shared, ctx.file);
@@ -85,7 +85,7 @@ export default class JustSharePleasePlugin extends Plugin {
             id: "delete",
             name: "Delete current file from JSP",
             editorCheckCallback: (checking, _, ctx) => {
-                let shared = this.settings.shared.find(i => i.path == ctx.file.path);
+                let shared = this.getSharedItem(ctx.file);
                 if (shared) {
                     if (!checking)
                         this.deleteFile(shared);
@@ -102,6 +102,10 @@ export default class JustSharePleasePlugin extends Plugin {
 
     async saveSettings(): Promise<void> {
         await this.saveData(this.settings);
+    }
+
+    getSharedItem(file: TFile): SharedItem {
+        return this.settings.shared.find(f => f.path == file.path);
     }
 
     async shareFile(file: TFile): Promise<SharedItem> {
