@@ -193,7 +193,7 @@ export default class JustSharePleasePlugin extends Plugin {
 
         // embed attachments directly
         let attachments = /!\[(.*)]\((.+)\)|!\[\[(.+)]]/g;
-        let match;
+        let match: RegExpExecArray;
         while ((match = attachments.exec(text)) != null) {
             let alt = match[1] ?? "";
             let url = match[2] ?? match[3];
