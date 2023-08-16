@@ -1,4 +1,4 @@
-import {Notice, Plugin, requestUrl, TFile} from "obsidian";
+import {arrayBufferToBase64, Notice, Plugin, requestUrl, TFile} from "obsidian";
 import {defaultSettings, JSPSettings, SharedItem} from "./settings";
 import {JSPSettingsTab} from "./settings-tab";
 import {basename, extname} from "path";
@@ -112,7 +112,7 @@ export default class JustSharePleasePlugin extends Plugin {
             let response = await requestUrl({
                 url: `${this.settings.url}/share.php`,
                 method: "POST",
-                body: JSON.stringify({content: this.preProcessMarkdown(await this.app.vault.cachedRead(file))})
+                body: JSON.stringify({content: await this.preProcessMarkdown(file)})
             });
             let shared = response.json as SharedItem;
             shared.path = file.path;
@@ -139,7 +139,7 @@ export default class JustSharePleasePlugin extends Plugin {
                 url: `${this.settings.url}/share.php?id=${item.id}`,
                 method: "PATCH",
                 headers: {"Password": item.password},
-                body: JSON.stringify({content: this.preProcessMarkdown(await this.app.vault.cachedRead(file))})
+                body: JSON.stringify({content: await this.preProcessMarkdown(file)})
             });
             new Notice(`Successfully updated ${file.basename} on JSP`);
             return true;
@@ -184,10 +184,31 @@ export default class JustSharePleasePlugin extends Plugin {
             new Notice(`Copied link to ${basename(item.path, extname(item.path))} to clipboard`);
     }
 
-    preProcessMarkdown(text: string): string {
+    async preProcessMarkdown(file: TFile): Promise<string> {
+        let text = await this.app.vault.cachedRead(file);
+
         // strip frontmatter
         if (this.settings.stripFrontmatter)
             text = text.replace(/^---\s*\n.*?\n---\s*\n(.*)$/s, "$1");
+
+        // embed attachments directly
+        let attachments = /!\[(.*)]\((.+)\)|!\[\[(.+)]]/g;
+        let match;
+        while ((match = attachments.exec(text)) != null) {
+            let alt = match[1] ?? "";
+            let url = match[2] ?? match[3];
+            if (url.startsWith("http"))
+                continue;
+            try {
+                let resolved = this.app.metadataCache.getFirstLinkpathDest(url, file.path).path;
+                let attachment = this.app.vault.getAbstractFileByPath(resolved);
+                let data = arrayBufferToBase64(await this.app.vault.readBinary(attachment as TFile));
+                let img = `<img src="data:image/${extname(resolved).substring(1)};base64, ${data}" alt="${alt}">`;
+                text = text.substring(0, match.index) + img + text.substring(match.index + match[0].length);
+            } catch (e) {
+                console.log(`Error embedding attachment ${url}: ${e}`);
+            }
+        }
 
         return text;
     }

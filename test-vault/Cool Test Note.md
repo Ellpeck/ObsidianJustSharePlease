@@ -36,3 +36,13 @@ The following is $x^2 = 7$, but more complicated!
 $$
 x^2 + \sum_{i = 1}^{10000} x^2 \cdot 0 = 7
 $$
+
+image!
+
+![this is an image my friends, and this is my alt text](Obsidian_TtC7w4GA86.png)
+
+wikilink image!
+
+![[Pasted image 20230816130420.png]]
+
+nice
