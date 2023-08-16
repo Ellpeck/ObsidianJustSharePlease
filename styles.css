@@ -3,3 +3,17 @@
     width: 400px;
     height: auto;
 }
+
+.just-share-please-view .clickable-icon {
+    display: inline;
+}
+
+.just-share-please-shared-name {
+    display: block;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.just-share-please-shared-item {
+    margin-bottom: 20px;
+}

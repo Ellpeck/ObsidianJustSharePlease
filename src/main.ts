@@ -2,19 +2,29 @@ import {arrayBufferToBase64, Notice, Plugin, requestUrl, TFile} from "obsidian";
 import {defaultSettings, JSPSettings, SharedItem} from "./settings";
 import {JSPSettingsTab} from "./settings-tab";
 import {basename, extname} from "path";
+import {JSPView} from "./view";
 
 export default class JustSharePleasePlugin extends Plugin {
 
-    // TODO panel that displays all shares, including ones for removed files, and allows unsharing or updating them
-    // TODO add a setting for auto-refreshing uploads when saving
-    settings: JSPSettings;
+    public settings: JSPSettings;
 
     async onload(): Promise<void> {
         await this.loadSettings();
         this.addSettingTab(new JSPSettingsTab(this.app, this));
 
+        this.registerView(JSPView.type, l => new JSPView(this, l));
+        this.addCommand({
+            id: `open-${JSPView.type}`,
+            name: `Open Just Share Please view`,
+            callback: async () => {
+                if (!this.app.workspace.getLeavesOfType(JSPView.type).length)
+                    await this.app.workspace.getRightLeaf(false).setViewState({type: JSPView.type, active: true});
+                this.app.workspace.revealLeaf(this.app.workspace.getLeavesOfType(JSPView.type)[0]);
+            }
+        });
+
         this.registerEvent(this.app.workspace.on("file-menu", async (m, f) => {
-            if (f instanceof TFile) {
+            if (f instanceof TFile && f.extension == "md") {
                 let shared = this.getSharedItem(f);
                 if (!shared) {
                     m.addItem(i => {
@@ -93,6 +103,7 @@ export default class JustSharePleasePlugin extends Plugin {
                 return false;
             }
         });
+
     }
 
     async loadSettings(): Promise<void> {
@@ -122,6 +133,7 @@ export default class JustSharePleasePlugin extends Plugin {
 
             this.settings.shared.push(shared);
             await this.saveSettings();
+            this.refreshAllViews();
 
             return shared;
         } catch (e) {
@@ -167,6 +179,7 @@ export default class JustSharePleasePlugin extends Plugin {
 
             this.settings.shared.remove(item);
             await this.saveSettings();
+            this.refreshAllViews();
 
             return true;
         } catch (e) {
@@ -211,5 +224,13 @@ export default class JustSharePleasePlugin extends Plugin {
         }
 
         return text;
+    }
+
+    // TODO refresh when a file is moved or deleted in Obsidian
+    refreshAllViews(): void {
+        for (let leaf of this.app.workspace.getLeavesOfType(JSPView.type)) {
+            if (leaf.view instanceof JSPView)
+                leaf.view.refresh();
+        }
     }
 }

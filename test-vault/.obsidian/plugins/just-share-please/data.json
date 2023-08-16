@@ -2,13 +2,8 @@
   "url": "http://localhost:8080",
   "shared": [
     {
-      "id": "7dd626d1",
-      "password": "6253e1ab4b813dc08d52ee7c82b0990b",
-      "path": "Second note.md"
-    },
-    {
-      "id": "fa0cf7f7",
-      "password": "b82b04752742c61bd602b52f535cb484",
+      "id": "de56fe78",
+      "password": "2d276f4d3c0715be08ad1812faa97deb",
       "path": "Cool Test Note.md"
     }
   ],
