@@ -7,7 +7,6 @@ export default class JustSharePleasePlugin extends Plugin {
 
     // TODO panel that displays all shares, including ones for removed files, and allows unsharing or updating them
     // TODO add a setting for auto-refreshing uploads when saving
-    // TODO strip frontmatter before uploading? maybe optionally
     settings: JSPSettings;
 
     async onload(): Promise<void> {
@@ -113,7 +112,7 @@ export default class JustSharePleasePlugin extends Plugin {
             let response = await requestUrl({
                 url: `${this.settings.url}/share.php`,
                 method: "POST",
-                body: JSON.stringify({content: await this.app.vault.cachedRead(file)})
+                body: JSON.stringify({content: this.preProcessMarkdown(await this.app.vault.cachedRead(file))})
             });
             let shared = response.json as SharedItem;
             shared.path = file.path;
@@ -140,7 +139,7 @@ export default class JustSharePleasePlugin extends Plugin {
                 url: `${this.settings.url}/share.php?id=${item.id}`,
                 method: "PATCH",
                 headers: {"Password": item.password},
-                body: JSON.stringify({content: await this.app.vault.cachedRead(file)})
+                body: JSON.stringify({content: this.preProcessMarkdown(await this.app.vault.cachedRead(file))})
             });
             new Notice(`Successfully updated ${file.basename} on JSP`);
             return true;
@@ -183,5 +182,13 @@ export default class JustSharePleasePlugin extends Plugin {
         await navigator.clipboard.writeText(`${this.settings.url}#${item.id}`);
         if (notice)
             new Notice(`Copied link to ${basename(item.path, extname(item.path))} to clipboard`);
+    }
+
+    preProcessMarkdown(text: string): string {
+        // strip frontmatter
+        if (this.settings.stripFrontmatter)
+            text = text.replace(/^---\s*\n.*?\n---\s*\n(.*)$/s, "$1");
+
+        return text;
     }
 }

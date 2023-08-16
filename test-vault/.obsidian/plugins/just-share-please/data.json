@@ -7,9 +7,10 @@
       "path": "Second note.md"
     },
     {
-      "id": "281d96f9",
-      "password": "2eb4979a9e853df98f5fcdc2cdc4b770",
+      "id": "fa0cf7f7",
+      "password": "b82b04752742c61bd602b52f535cb484",
       "path": "Cool Test Note.md"
     }
-  ]
+  ],
+  "stripFrontmatter": true
 }

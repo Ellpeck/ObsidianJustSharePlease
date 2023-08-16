@@ -1,3 +1,8 @@
+---
+test: yes
+---
+
+
 # Cool Test Note
 
 This is a cool test note, my friends!

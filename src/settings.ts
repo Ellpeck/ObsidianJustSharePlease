@@ -1,12 +1,14 @@
 export const defaultSettings: JSPSettings = {
     url: "http://localhost:8080",
-    shared: []
+    shared: [],
+    stripFrontmatter: true
 };
 
 export interface JSPSettings {
 
     url: string;
     shared: SharedItem[];
+    stripFrontmatter: boolean;
 
 }
 
