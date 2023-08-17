@@ -2,9 +2,14 @@
   "url": "https://jsp.ellpeck.de",
   "shared": [
     {
-      "id": "3d0c1531",
-      "password": "aecfb2647cc647b0e047673a670e68be",
+      "id": "3c781ebc",
+      "password": "7eae9eea1f7503f6f236b242d45657e6",
       "path": "Cool Test Note.md"
+    },
+    {
+      "id": "d47f7765",
+      "password": "513115b756d9ddebd3afd6efe4c248c6",
+      "path": "Even cooler note.md"
     }
   ],
   "stripFrontmatter": true
