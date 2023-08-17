@@ -12,7 +12,8 @@
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-anchor@8.6.7/dist/markdownItAnchor.umd.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=JetBrains+Mono&display=swap">
@@ -40,26 +41,48 @@
                     engine: katex,
                     delimiters: ["dollars", "beg_end"]
                 });
+                md.use(markdownItAnchor, {
+                    permalink: markdownItAnchor.permalink.linkInsideHeader({
+                        placement: "after",
+                        ariaHidden: true
+                    }),
+                    // prepend current file id to the anchor permalink (see getId)
+                    slugify: s => `${getId() ?? ""}-${encodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, "-"))}`
+                });
 
                 let main = $("#main");
                 $(window).on("hashchange", display);
                 display();
 
                 function display() {
-                    let hash = window.location.hash;
-                    if (hash.startsWith("#"))
-                        hash = hash.substring(1);
+                    let id = getId();
                     $.ajax({
                         method: "get",
-                        url: hash ? `share.php?id=${hash}` : "index.md",
-                        success: t => main.html(DOMPurify.sanitize(md.render(t))),
-                        error: (r, s, e) => main.html(`<div class="error"><p>Error loading shared note with id <code>${hash}</code>: ${e}</p><p><a href="#">Home</a></p></div>`)
+                        url: id ? `share.php?id=${id}` : "index.md",
+                        success: t => {
+                            main.html(DOMPurify.sanitize(md.render(t)));
+
+                            // scroll to anchor
+                            let element = $(window.location.hash);
+                            if (element.length)
+                                $(window).scrollTop(element.offset().top);
+                        },
+                        error: (r, s, e) => main.html(`<div class="error"><p>Error loading shared note with id <code>${id}</code>: ${e}</p><p><a href="#">Home</a></p></div>`)
                     });
+                }
+
+                function getId() {
+                    let hash = window.location.hash;
+                    if (!hash)
+                        return undefined;
+                    // hashes consist of the file id, a dash and then the permalink anchor name
+                    let dash = hash.indexOf("-");
+                    return hash.substring(1, dash > 0 ? dash : hash.length);
                 }
             </script>
         </div>
         <div id="footer">
-            Created using <a href="https://github.com/Ellpeck/ObsidianJustSharePlease">Just Share Please</a> for <a href="https://obsidian.md">Obsidian</a>
+            Created using <a href="/">Just Share Please</a> for <a href="https://obsidian.md">Obsidian</a>
         </div>
     </div>
 </body>

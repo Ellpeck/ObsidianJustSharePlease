@@ -18,10 +18,10 @@ export class JSPSettingsTab extends PluginSettingTab {
         new Setting(this.containerEl)
             .setName("Just Share Please Server")
             .setDesc(createFragment(f => {
-                f.createSpan({text: "URL for the Just Share Please server to upload to and share links for. Defaults to the official server at "});
+                f.createSpan({text: "URL for the Just Share Please server to upload to and share links for. Defaults to the official site "});
                 f.createEl("a", {text: "jsp.ellpeck.de", href: defaultSettings.url});
                 f.createSpan({text: ". For more info on self-hosting, see "});
-                f.createEl("a", {text: "the README on GitHub", href: "https://github.com/Ellpeck/ObsidianJustSharePlease/blob/main/README.md"});
+                f.createEl("a", {text: "the official site", href: "https://jsp.ellpeck.de/#-self-hosting"});
                 f.createSpan({text: "."});
             }))
             .addText(t => {
