@@ -43,6 +43,17 @@ export class JSPSettingsTab extends PluginSettingTab {
                 });
             });
 
+        new Setting(this.containerEl)
+            .setName("Include Note Name")
+            .setDesc("Whether the name of the shared note should be included in the share as a heading.")
+            .addToggle(t => {
+                t.setValue(this.plugin.settings.includeNoteName);
+                t.onChange(async v => {
+                    this.plugin.settings.includeNoteName = v;
+                    await this.plugin.saveSettings();
+                });
+            });
+
         this.containerEl.createEl("hr");
         this.containerEl.createEl("p", {text: "If you like this plugin and want to support its development, you can do so through my website by clicking this fancy image!"});
         this.containerEl.createEl("a", {href: "https://ellpeck.de/support"})

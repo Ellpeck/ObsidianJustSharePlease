@@ -1,16 +1,6 @@
 {
-  "url": "https://jsp.ellpeck.de",
-  "shared": [
-    {
-      "id": "3c781ebc",
-      "password": "7eae9eea1f7503f6f236b242d45657e6",
-      "path": "Cool Test Note.md"
-    },
-    {
-      "id": "d47f7765",
-      "password": "513115b756d9ddebd3afd6efe4c248c6",
-      "path": "Even cooler note.md"
-    }
-  ],
-  "stripFrontmatter": true
+  "url": "http://localhost:8080",
+  "shared": [],
+  "stripFrontmatter": true,
+  "includeNoteName": true
 }

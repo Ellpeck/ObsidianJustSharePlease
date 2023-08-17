@@ -1,7 +1,8 @@
 export const defaultSettings: JSPSettings = {
     url: "https://jsp.ellpeck.de",
     shared: [],
-    stripFrontmatter: true
+    stripFrontmatter: true,
+    includeNoteName: true
 };
 
 // TODO add a setting for auto-refreshing uploads when saving
@@ -11,6 +12,7 @@ export interface JSPSettings {
     url: string;
     shared: SharedItem[];
     stripFrontmatter: boolean;
+    includeNoteName: boolean;
 
 }
 
