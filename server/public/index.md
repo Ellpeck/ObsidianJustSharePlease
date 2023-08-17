@@ -28,7 +28,7 @@ When sharing a note, its content as well as additional metadata created by the b
 Due to the fact that note links are generated randomly, it is reasonably difficult for attackers to guess note links and access notes that they're not supposed to. That being said, all notes are still publicly available the same way that YouTube videos set to "Unlisted" are still publicly available: harder to access, but not impossible; not truly private.
 
 Before being uploaded, notes go through minor preprocessing as part of the plugin, including
-- stripping frontmatter (optionally, this can be changed in the plugin settinsg),
+- stripping frontmatter (optionally, this can be changed in the plugin settings),
 - converting all attachments to `base64` encoding and embedding them in the shared note as HTML.
 
 Currently, links to other notes are included in your share, but don't actually lead anywhere, and sharing linked notes is not supported yet.
@@ -68,7 +68,7 @@ Lastly, to get your server connected to the plugin, head to its settings and cha
 ## About This Site
 The official Just Share Please site, [jsp.ellpeck.de](https://jsp.ellpeck.de), is run by Ellpeck, the creator of the plugin. It is hosted on a server in Germany, and connections to and from it are secured using SSL encryption, partly through LetsEncrypt and partly through Cloudflare SSL.
 
-If you have lost access to your shares due to your settingds file being deleted or due to other reasons, and you want your shares to be deleted, please contact Ell at [me@ellpeck.de](mailto:me@ellpeck.de) or through his [Discord server](https://ellpeck.de/discord).
+If you have lost access to your shares due to your settings file being deleted or due to other reasons, and you want your shares to be deleted, please contact Ell at [me@ellpeck.de](mailto:me@ellpeck.de) or through his [Discord server](https://ellpeck.de/discord).
 
 Additionally, the site's source can be found [on GitHub](https://github.com/Ellpeck/ObsidianJustSharePlease/tree/main/server), and for information on privacy and ownership, see the [imprint](https://ellpeck.de/impressum/) and [privacy policy](https://ellpeck.de/privacy/). Ellpeck Games is not responsible for content published through Just Share Please.
 
