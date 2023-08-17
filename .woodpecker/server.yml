@@ -1,5 +1,5 @@
 ﻿when:
-    path: "server/public/**"
+    path: "server/**"
 steps:
     deploy-server:
         image: debian:latest
