@@ -1,7 +1,7 @@
 {
     "name": "just-share-please",
     "version": "0.1.0",
-    "description": "A simple plugin that allows sharing a note using a random link",
+    "description": "Quickly and easily share individual notes online using an anonymized link. Also easy to self-host!",
     "main": "main.js",
     "scripts": {
         "dev": "node esbuild.config.mjs",
