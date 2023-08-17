@@ -1,6 +1,12 @@
 {
   "url": "http://localhost:8080",
-  "shared": [],
+  "shared": [
+    {
+      "id": "6ba272db",
+      "password": "6bf48896857373ff766f44052cbc8c38",
+      "path": "Cool Test Note.md"
+    }
+  ],
   "stripFrontmatter": true,
   "includeNoteName": true
 }

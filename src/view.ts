@@ -31,8 +31,10 @@ export class JSPView extends ItemView {
                         .setClass("clickable-icon")
                         .setTooltip("Open in Obsidian")
                         .setIcon("edit")
-                        .onClick(async () => {
-                            // TODO open in obsidian
+                        .onClick(async e => {
+                            let leaf = this.app.workspace.getLeaf(e.ctrlKey);
+                            await leaf.openFile(file);
+                            this.app.workspace.setActiveLeaf(leaf, {focus: true});
                         });
                     new ButtonComponent(div)
                         .setClass("clickable-icon")
