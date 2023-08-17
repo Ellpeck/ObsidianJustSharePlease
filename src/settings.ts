@@ -1,5 +1,5 @@
 export const defaultSettings: JSPSettings = {
-    url: "http://localhost:8080",
+    url: "https://jsp.ellpeck.de",
     shared: [],
     stripFrontmatter: true
 };
