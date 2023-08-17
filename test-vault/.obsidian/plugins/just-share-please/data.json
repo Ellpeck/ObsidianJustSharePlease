@@ -1,9 +1,9 @@
 {
-  "url": "http://localhost:8080",
+  "url": "https://jsp.ellpeck.de",
   "shared": [
     {
-      "id": "de56fe78",
-      "password": "2d276f4d3c0715be08ad1812faa97deb",
+      "id": "3d0c1531",
+      "password": "aecfb2647cc647b0e047673a670e68be",
       "path": "Cool Test Note.md"
     }
   ],

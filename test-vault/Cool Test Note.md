@@ -1,8 +1,6 @@
 ---
 test: yes
 ---
-
-yo
 # Cool Test Note
 
 This is a cool test note, my friends!
@@ -12,23 +10,18 @@ This is a cool test note, my friends!
 ```js
 $.ajax({  
     method: "get",  
-    url: `share.php?id=${hash}`,  
+    url: id ? `share.php?id=${id}` : "index.md",  
     success: t => {  
-        marked.use(markedKatex());  
-        marked.use(markedHighlight.markedHighlight({  
-            langPrefix: "hljs language-",  
-            highlight: (c, l) => {  
-                const language = hljs.getLanguage(l) ? l : "plaintext";  
-                return hljs.highlight(c, {language}).value;  
-            }  
-        }));  
-        main.html(DOMPurify.sanitize(marked.parse(t)));  
+        main.html(DOMPurify.sanitize(md.render(t)));  
+  
+        // scroll to anchor  
+        let element = $(window.location.hash);  
+        if (element.length)  
+            $(window).scrollTop(element.offset().top);  
     },  
-    // TODO display this error more nicely  
-    error: (r, s, e) => main.html(e)  
+    error: (r, s, e) => main.html(`<div class="error"><p>Error loading shared note with id <code>${id}</code>: ${e}</p><p><a href="#">Home</a></p></div>`)  
 });
 ```
-http://localhost:8080#ff3ebb34
 
 cool!!
 
