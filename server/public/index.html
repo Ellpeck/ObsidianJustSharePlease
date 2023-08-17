@@ -47,7 +47,7 @@
                         ariaHidden: true
                     }),
                     // prepend current file id to the anchor permalink (see getId)
-                    slugify: s => `${getId() ?? ""}-${encodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, "-"))}`
+                    slugify: s => `${getId() ?? ""}-${encodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, "-").replace(/[^A-Za-z0-9_-]/g, ""))}`
                 });
 
                 let main = $("#main");
