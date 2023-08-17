@@ -72,6 +72,13 @@ export default class JustSharePleasePlugin extends Plugin {
                 }
             }
         }));
+        this.registerEvent(this.app.vault.on("modify", f => {
+            if (this.settings.autoUpdateShares && f instanceof TFile) {
+                let shared = this.getSharedItem(f.path);
+                if (shared)
+                    this.updateFile(shared, f, false);
+            }
+        }));
 
         this.addCommand({
             id: "share",
@@ -177,12 +184,10 @@ export default class JustSharePleasePlugin extends Plugin {
                 new Notice(`Successfully updated ${file.basename} on JSP`);
             return true;
         } catch (e) {
-            if (notice) {
-                new Notice(createFragment(f => {
-                    f.createSpan({text: `There was an error updating ${file.basename}: `});
-                    f.createEl("code", {text: e});
-                }), 10000);
-            }
+            new Notice(createFragment(f => {
+                f.createSpan({text: `There was an error updating ${file.basename}: `});
+                f.createEl("code", {text: e});
+            }), 10000);
             console.log(e);
         }
 
@@ -205,12 +210,10 @@ export default class JustSharePleasePlugin extends Plugin {
                 new Notice(`Successfully deleted ${name} from JSP`);
             return true;
         } catch (e) {
-            if (notice) {
-                new Notice(createFragment(f => {
-                    f.createSpan({text: `There was an error deleting ${name}: `});
-                    f.createEl("code", {text: e});
-                }), 10000);
-            }
+            new Notice(createFragment(f => {
+                f.createSpan({text: `There was an error deleting ${name}: `});
+                f.createEl("code", {text: e});
+            }), 10000);
             console.log(e);
         }
     }

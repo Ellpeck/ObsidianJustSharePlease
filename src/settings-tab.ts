@@ -14,7 +14,6 @@ export class JSPSettingsTab extends PluginSettingTab {
     display(): void {
         this.containerEl.empty();
         this.containerEl.createEl("h2", {text: "Just Share Please Settings"});
-
         new Setting(this.containerEl)
             .setName("Just Share Please Server")
             .setDesc(createFragment(f => {
@@ -31,7 +30,6 @@ export class JSPSettingsTab extends PluginSettingTab {
                     await this.plugin.saveSettings();
                 });
             });
-
         new Setting(this.containerEl)
             .setName("Strip Frontmatter")
             .setDesc("Whether document frontmatter (also known as properties) should be removed from the uploaded share.")
@@ -42,7 +40,6 @@ export class JSPSettingsTab extends PluginSettingTab {
                     await this.plugin.saveSettings();
                 });
             });
-
         new Setting(this.containerEl)
             .setName("Include Note Name")
             .setDesc("Whether the name of the shared note should be included in the share as a heading.")
@@ -53,7 +50,6 @@ export class JSPSettingsTab extends PluginSettingTab {
                     await this.plugin.saveSettings();
                 });
             });
-
         new Setting(this.containerEl)
             .setName("Unshare Deleted Files")
             .setDesc("Whether shares of files should be removed automatically when they are deleted. Only supported when deleting from within Obsidian.")
@@ -61,6 +57,16 @@ export class JSPSettingsTab extends PluginSettingTab {
                 t.setValue(this.plugin.settings.unshareDeletedFiles);
                 t.onChange(async v => {
                     this.plugin.settings.unshareDeletedFiles = v;
+                    await this.plugin.saveSettings();
+                });
+            });
+        new Setting(this.containerEl)
+            .setName("Automatically Update Shares")
+            .setDesc("Whether a file's share should automatically be updated when the file is changed from within Obsidian.")
+            .addToggle(t => {
+                t.setValue(this.plugin.settings.autoUpdateShares);
+                t.onChange(async v => {
+                    this.plugin.settings.autoUpdateShares = v;
                     await this.plugin.saveSettings();
                 });
             });

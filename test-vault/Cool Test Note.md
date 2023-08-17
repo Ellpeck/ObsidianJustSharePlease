@@ -24,6 +24,8 @@ $.ajax({
 
 cool!!
 
+blah blah i added and removed this
+
 The following is $x^2 = 7$, but more complicated!
 $$
 x^2 + \sum_{i = 1}^{10000} x^2 \cdot 0 = 7

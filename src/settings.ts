@@ -3,10 +3,10 @@ export const defaultSettings: JSPSettings = {
     shared: [],
     stripFrontmatter: true,
     includeNoteName: true,
-    unshareDeletedFiles: true
+    unshareDeletedFiles: true,
+    autoUpdateShares: false
 };
 
-// TODO add a setting for auto-refreshing uploads when saving
 export interface JSPSettings {
 
     url: string;
@@ -14,6 +14,7 @@ export interface JSPSettings {
     stripFrontmatter: boolean;
     includeNoteName: boolean;
     unshareDeletedFiles: boolean;
+    autoUpdateShares: boolean;
 
 }
 

@@ -1,7 +1,14 @@
 {
   "url": "http://localhost:8080",
-  "shared": [],
+  "shared": [
+    {
+      "id": "234df7b7",
+      "password": "0ef1504bfe83cd9ca812434caa7aacf4",
+      "path": "Cool Test Note.md"
+    }
+  ],
   "stripFrontmatter": true,
   "includeNoteName": true,
-  "unshareDeletedFiles": false
+  "unshareDeletedFiles": false,
+  "autoUpdateShares": false
 }
