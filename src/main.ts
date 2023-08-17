@@ -25,7 +25,7 @@ export default class JustSharePleasePlugin extends Plugin {
 
         this.registerEvent(this.app.workspace.on("file-menu", async (m, f) => {
             if (f instanceof TFile && f.extension == "md") {
-                let shared = this.getSharedItem(f);
+                let shared = this.getSharedItem(f.path);
                 if (!shared) {
                     m.addItem(i => {
                         i.setTitle("Share to JSP");
@@ -51,12 +51,33 @@ export default class JustSharePleasePlugin extends Plugin {
                 }
             }
         }));
+        this.registerEvent(this.app.vault.on("rename", (f, p) => {
+            if (f instanceof TFile) {
+                let shared = this.getSharedItem(p);
+                if (shared) {
+                    shared.path = f.path;
+                    this.refreshAllViews();
+                }
+            }
+        }));
+        this.registerEvent(this.app.vault.on("delete", f => {
+            if (f instanceof TFile) {
+                let shared = this.getSharedItem(f.path);
+                if (shared) {
+                    if (this.settings.unshareDeletedFiles) {
+                        this.deleteFile(shared, false);
+                    } else {
+                        this.refreshAllViews();
+                    }
+                }
+            }
+        }));
 
         this.addCommand({
             id: "share",
             name: "Share current file to JSP",
             editorCheckCallback: (checking, _, ctx) => {
-                if (!this.getSharedItem(ctx.file)) {
+                if (!this.getSharedItem(ctx.file.path)) {
                     if (!checking)
                         this.shareFile(ctx.file);
                     return true;
@@ -68,7 +89,7 @@ export default class JustSharePleasePlugin extends Plugin {
             id: "copy",
             name: "Copy current file's JSP link",
             editorCheckCallback: (checking, _, ctx) => {
-                let shared = this.getSharedItem(ctx.file);
+                let shared = this.getSharedItem(ctx.file.path);
                 if (shared) {
                     if (!checking)
                         this.copyShareLink(shared);
@@ -81,7 +102,7 @@ export default class JustSharePleasePlugin extends Plugin {
             id: "update",
             name: "Update current file in JSP",
             editorCheckCallback: (checking, _, ctx) => {
-                let shared = this.getSharedItem(ctx.file);
+                let shared = this.getSharedItem(ctx.file.path);
                 if (shared) {
                     if (!checking)
                         this.updateFile(shared, ctx.file);
@@ -94,7 +115,7 @@ export default class JustSharePleasePlugin extends Plugin {
             id: "delete",
             name: "Delete current file from JSP",
             editorCheckCallback: (checking, _, ctx) => {
-                let shared = this.getSharedItem(ctx.file);
+                let shared = this.getSharedItem(ctx.file.path);
                 if (shared) {
                     if (!checking)
                         this.deleteFile(shared);
@@ -114,8 +135,8 @@ export default class JustSharePleasePlugin extends Plugin {
         await this.saveData(this.settings);
     }
 
-    getSharedItem(file: TFile): SharedItem {
-        return this.settings.shared.find(f => f.path == file.path);
+    getSharedItem(path: string): SharedItem {
+        return this.settings.shared.find(f => f.path == path);
     }
 
     async shareFile(file: TFile): Promise<SharedItem> {
@@ -128,13 +149,12 @@ export default class JustSharePleasePlugin extends Plugin {
             let shared = response.json as SharedItem;
             shared.path = file.path;
 
-            await this.copyShareLink(shared, false);
-            new Notice(`Successfully shared ${file.basename} and copied link to clipboard`);
-
             this.settings.shared.push(shared);
             await this.saveSettings();
             this.refreshAllViews();
 
+            await this.copyShareLink(shared, false);
+            new Notice(`Successfully shared ${file.basename} and copied link to clipboard`);
             return shared;
         } catch (e) {
             new Notice(createFragment(f => {
@@ -153,7 +173,8 @@ export default class JustSharePleasePlugin extends Plugin {
                 headers: {"Password": item.password},
                 body: JSON.stringify({content: await this.preProcessMarkdown(file)})
             });
-            new Notice(`Successfully updated ${file.basename} on JSP`);
+            if (notice)
+                new Notice(`Successfully updated ${file.basename} on JSP`);
             return true;
         } catch (e) {
             if (notice) {
@@ -167,7 +188,7 @@ export default class JustSharePleasePlugin extends Plugin {
 
     }
 
-    async deleteFile(item: SharedItem): Promise<boolean> {
+    async deleteFile(item: SharedItem, notice = true): Promise<boolean> {
         let name = basename(item.path, extname(item.path));
         try {
             await requestUrl({
@@ -175,18 +196,21 @@ export default class JustSharePleasePlugin extends Plugin {
                 method: "DELETE",
                 headers: {"Password": item.password}
             });
-            new Notice(`Successfully deleted ${name} from JSP`);
 
             this.settings.shared.remove(item);
             await this.saveSettings();
             this.refreshAllViews();
 
+            if (notice)
+                new Notice(`Successfully deleted ${name} from JSP`);
             return true;
         } catch (e) {
-            new Notice(createFragment(f => {
-                f.createSpan({text: `There was an error deleting ${name}: `});
-                f.createEl("code", {text: e});
-            }), 10000);
+            if (notice) {
+                new Notice(createFragment(f => {
+                    f.createSpan({text: `There was an error deleting ${name}: `});
+                    f.createEl("code", {text: e});
+                }), 10000);
+            }
             console.log(e);
         }
     }
@@ -230,7 +254,6 @@ export default class JustSharePleasePlugin extends Plugin {
         return text;
     }
 
-    // TODO refresh when a file is moved or deleted in Obsidian
     refreshAllViews(): void {
         for (let leaf of this.app.workspace.getLeavesOfType(JSPView.type)) {
             if (leaf.view instanceof JSPView)

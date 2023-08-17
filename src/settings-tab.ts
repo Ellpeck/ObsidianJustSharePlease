@@ -54,6 +54,17 @@ export class JSPSettingsTab extends PluginSettingTab {
                 });
             });
 
+        new Setting(this.containerEl)
+            .setName("Unshare Deleted Files")
+            .setDesc("Whether shares of files should be removed automatically when they are deleted. Only supported when deleting from within Obsidian.")
+            .addToggle(t => {
+                t.setValue(this.plugin.settings.unshareDeletedFiles);
+                t.onChange(async v => {
+                    this.plugin.settings.unshareDeletedFiles = v;
+                    await this.plugin.saveSettings();
+                });
+            });
+
         this.containerEl.createEl("hr");
         this.containerEl.createEl("p", {text: "If you like this plugin and want to support its development, you can do so through my website by clicking this fancy image!"});
         this.containerEl.createEl("a", {href: "https://ellpeck.de/support"})
