@@ -45,9 +45,13 @@ As an example, the official site is hosted using Apache 2 with the following vir
     DocumentRoot /var/www/jsp/public
 
     <Directory /var/www/jsp/public>
-        Options Indexes FollowSymLinks MultiViews
-        Order allow, deny
+        Options FollowSymLinks MultiViews
+
+        Order allow,deny
         Allow from all
+
+        ExpiresActive On
+        ExpiresDefault A600
     </Directory>
 
     SSLCertificateFile ...
