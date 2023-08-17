@@ -1,0 +1,13 @@
+﻿when:
+    path: "server/public/**"
+steps:
+    deploy-server:
+        image: debian:latest
+        when:
+            - event: [push, manual]
+              branch: main
+        commands:
+            - rm -rfv /var/www/jsp/public/*
+            - cp -rv server/. /var/www/jsp
+        volumes:
+            - /var/www/jsp:/var/www/jsp
