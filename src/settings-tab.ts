@@ -13,7 +13,6 @@ export class JSPSettingsTab extends PluginSettingTab {
 
     display(): void {
         this.containerEl.empty();
-        this.containerEl.createEl("h2", {text: "Just Share Please Settings"});
         new Setting(this.containerEl)
             .setName("Just Share Please Server")
             .setDesc(createFragment(f => {
