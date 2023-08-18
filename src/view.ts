@@ -1,6 +1,5 @@
 ﻿import {ButtonComponent, ItemView, TFile, WorkspaceLeaf} from "obsidian";
-import {basename, extname} from "path";
-import JustSharePleasePlugin from "./main";
+import JustSharePleasePlugin, {removeExtension} from "./main";
 
 export class JSPView extends ItemView {
 
@@ -20,7 +19,7 @@ export class JSPView extends ItemView {
             for (let shared of this.plugin.settings.shared) {
                 let file = this.plugin.app.vault.getAbstractFileByPath(shared.path) as TFile;
                 let div = content.createDiv({cls: "just-share-please-shared-item"});
-                div.createSpan({cls: "just-share-please-shared-name", text: basename(shared.path, extname(shared.path))});
+                div.createSpan({cls: "just-share-please-shared-name", text: removeExtension(shared.path)});
                 new ButtonComponent(div)
                     .setClass("clickable-icon")
                     .setTooltip("Copy JSP link")

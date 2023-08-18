@@ -1,7 +1,6 @@
 import {arrayBufferToBase64, Notice, Plugin, requestUrl, TFile} from "obsidian";
 import {defaultSettings, JSPSettings, SharedItem} from "./settings";
 import {JSPSettingsTab} from "./settings-tab";
-import {basename, extname} from "path";
 import {JSPView} from "./view";
 
 export default class JustSharePleasePlugin extends Plugin {
@@ -194,7 +193,7 @@ export default class JustSharePleasePlugin extends Plugin {
     }
 
     async deleteFile(item: SharedItem, notice = true): Promise<boolean> {
-        let name = basename(item.path, extname(item.path));
+        let name = removeExtension(item.path);
         try {
             await requestUrl({
                 url: `${this.settings.url}/share.php?id=${item.id}`,
@@ -221,7 +220,7 @@ export default class JustSharePleasePlugin extends Plugin {
     async copyShareLink(item: SharedItem, notice = true): Promise<void> {
         await navigator.clipboard.writeText(`${this.settings.url}#${item.id}`);
         if (notice)
-            new Notice(`Copied link to ${basename(item.path, extname(item.path))} to clipboard`);
+            new Notice(`Copied link to ${removeExtension(item.path)} to clipboard`);
     }
 
     async preProcessMarkdown(file: TFile): Promise<string> {
@@ -247,7 +246,7 @@ export default class JustSharePleasePlugin extends Plugin {
                 let resolved = this.app.metadataCache.getFirstLinkpathDest(url, file.path).path;
                 let attachment = this.app.vault.getAbstractFileByPath(resolved);
                 let data = arrayBufferToBase64(await this.app.vault.readBinary(attachment as TFile));
-                let img = `<img src="data:image/${extname(resolved).substring(1)};base64, ${data}" alt="${alt}">`;
+                let img = `<img src="data:image/${resolved.split(".").pop()};base64, ${data}" alt="${alt}">`;
                 text = text.substring(0, match.index) + img + text.substring(match.index + match[0].length);
             } catch (e) {
                 console.log(`Error embedding attachment ${url}: ${e}`);
@@ -263,4 +262,11 @@ export default class JustSharePleasePlugin extends Plugin {
                 leaf.view.refresh();
         }
     }
+
+}
+
+export function removeExtension(file: string): string {
+    let split = file.split(".");
+    split.pop();
+    return split.join(".");
 }

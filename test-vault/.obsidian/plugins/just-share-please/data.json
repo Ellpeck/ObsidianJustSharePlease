@@ -5,6 +5,11 @@
       "id": "234df7b7",
       "password": "0ef1504bfe83cd9ca812434caa7aacf4",
       "path": "Cool Test Note.md"
+    },
+    {
+      "id": "014b266c",
+      "password": "1c9459d7cdac804f72272c8f6d4a9abc",
+      "path": "dir/Cool Test Note.md"
     }
   ],
   "stripFrontmatter": true,
