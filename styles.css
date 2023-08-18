@@ -14,6 +14,12 @@
     padding-bottom: 5px;
 }
 
+.just-share-please-shared-path {
+    display: block;
+    padding-bottom: 5px;
+    font-size: 13px;
+}
+
 .just-share-please-shared-item {
     margin-bottom: 20px;
 }

@@ -19,7 +19,9 @@ export class JSPView extends ItemView {
             for (let shared of this.plugin.settings.shared) {
                 let file = this.plugin.app.vault.getAbstractFileByPath(shared.path) as TFile;
                 let div = content.createDiv({cls: "just-share-please-shared-item"});
-                div.createSpan({cls: "just-share-please-shared-name", text: removeExtension(shared.path)});
+                div.createSpan({cls: "just-share-please-shared-name", text: removeExtension(shared.path).split(/[/\\]/g).pop()});
+                if (file?.path.match(/[/\\]/))
+                    div.createSpan({cls: "just-share-please-shared-path", text: removeExtension(file.path)});
                 new ButtonComponent(div)
                     .setClass("clickable-icon")
                     .setTooltip("Copy JSP link")
