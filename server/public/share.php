@@ -114,13 +114,14 @@ function get_markdown_content(): ?string {
 }
 
 function get_markdown_path(string $id): string {
-    return get_data_path() . $id . ".md";
+    return get_id_base_path($id) . ".md";
 }
 
 function get_meta_path(string $id): string {
-    return get_data_path() . $id . ".json";
+    return get_id_base_path($id) . ".json";
 }
 
-function get_data_path(): string {
-    return dirname(getcwd()) . "/data/";
+function get_id_base_path(string $id): string {
+    // ensure id can't be used to traverse into other directories
+    return dirname(getcwd()) . "/data/" . basename($id);
 }
