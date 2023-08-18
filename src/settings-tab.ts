@@ -14,7 +14,7 @@ export class JSPSettingsTab extends PluginSettingTab {
     display(): void {
         this.containerEl.empty();
         new Setting(this.containerEl)
-            .setName("Just Share Please Server")
+            .setName("Just Share Please server")
             .setDesc(createFragment(f => {
                 f.createSpan({text: "URL for the Just Share Please server to upload to and share links for. Defaults to the official site "});
                 f.createEl("a", {text: "jsp.ellpeck.de", href: defaultSettings.url});
@@ -30,7 +30,7 @@ export class JSPSettingsTab extends PluginSettingTab {
                 });
             });
         new Setting(this.containerEl)
-            .setName("Strip Frontmatter")
+            .setName("Strip frontmatter")
             .setDesc("Whether document frontmatter (also known as properties) should be removed from the uploaded share.")
             .addToggle(t => {
                 t.setValue(this.plugin.settings.stripFrontmatter);
@@ -40,7 +40,7 @@ export class JSPSettingsTab extends PluginSettingTab {
                 });
             });
         new Setting(this.containerEl)
-            .setName("Include Note Name")
+            .setName("Include note name")
             .setDesc("Whether the name of the shared note should be included in the share as a heading.")
             .addToggle(t => {
                 t.setValue(this.plugin.settings.includeNoteName);
@@ -50,7 +50,7 @@ export class JSPSettingsTab extends PluginSettingTab {
                 });
             });
         new Setting(this.containerEl)
-            .setName("Unshare Deleted Files")
+            .setName("Unshare deleted files")
             .setDesc("Whether shares of files should be removed automatically when they are deleted. Only supported when deleting from within Obsidian.")
             .addToggle(t => {
                 t.setValue(this.plugin.settings.unshareDeletedFiles);
@@ -60,7 +60,7 @@ export class JSPSettingsTab extends PluginSettingTab {
                 });
             });
         new Setting(this.containerEl)
-            .setName("Automatically Update Shares")
+            .setName("Automatically update shares")
             .setDesc("Whether a file's share should automatically be updated when the file is changed from within Obsidian.")
             .addToggle(t => {
                 t.setValue(this.plugin.settings.autoUpdateShares);
