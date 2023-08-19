@@ -5,7 +5,9 @@
 }
 
 .just-share-please-view .clickable-icon {
-    display: inline;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
 }
 
 .just-share-please-shared-name {
