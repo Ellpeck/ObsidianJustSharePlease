@@ -56,4 +56,4 @@ nice
 
 [^1]: Normal footnote!
 
-[^text]: Text footnote!
+[^text]: Text footnote

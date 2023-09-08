@@ -12,6 +12,7 @@ code {
     font-family: "JetBrains Mono", monospace;
     font-variant-ligatures: none;
     border-radius: 5px;
+    line-height: initial;
 }
 
 img {
@@ -53,6 +54,7 @@ h1:hover .header-anchor, h2:hover .header-anchor, h3:hover .header-anchor, h4:ho
 .content {
     max-width: 700px;
     margin: 40px auto 80px;
+    line-height: 1.5;
 }
 
 .error {
