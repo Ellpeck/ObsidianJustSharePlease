@@ -230,6 +230,9 @@ export default class JustSharePleasePlugin extends Plugin {
         if (this.settings.stripFrontmatter)
             text = text.replace(/^---\s*\n.*?\n---\s*\n(.*)$/s, "$1");
 
+        // strip comments
+        text = text.replace(/%%.*?%%/sg, "");
+
         // include note name
         if (this.settings.includeNoteName)
             text = `# ${file.basename}\n\n${text}`;

@@ -2,7 +2,11 @@
 test: yes
 ---
 
-This is a cool test note, my friends!
+This is a cool test note%%with an inline comment%%, my friends!
+
+%%
+BLOCK COMMENT
+%%
 
 > How are you?
 
@@ -23,6 +27,13 @@ $.ajax({
 ```
 
 cool!!
+
+%%
+ANOTHER BLOCK COMMENT
+you know
+
+WITH A LOT OF TEXT
+%%
 
 blah blah i added and removed this
 
