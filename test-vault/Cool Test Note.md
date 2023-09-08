@@ -35,9 +35,9 @@ you know
 WITH A LOT OF TEXT
 %%
 
-blah blah i added and removed this
+blah blah i added and[^text] removed this[^1]
 
-The following is $x^2 = 7$, but more complicated!
+The following is $x^2 = 7$, but more^[Inline footnote!] complicated!
 $$
 x^2 + \sum_{i = 1}^{10000} x^2 \cdot 0 = 7
 $$
@@ -53,3 +53,7 @@ wikilink image!
 ![[Pasted image 20230816130420.png]]
 
 nice
+
+[^1]: Normal footnote!
+
+[^text]: Text footnote!

@@ -14,6 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it-anchor@8.6.7/dist/markdownItAnchor.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-footnote@3.0.3/dist/markdown-it-footnote.min.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=JetBrains+Mono&display=swap">
@@ -46,9 +47,25 @@
                         placement: "after",
                         ariaHidden: true
                     }),
-                    // prepend current file id to the anchor permalink (see getId)
+                    // prepend current file id to the anchor permalink
                     slugify: s => `${getId() ?? ""}-${encodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, "-").replace(/[^A-Za-z0-9_-]/g, ""))}`
                 });
+                md.use(markdownitFootnote);
+
+                let rulesToReplace = [
+                    // prepend current file id to footnotes
+                    ["footnote_ref", [/href="#(fn\d+)"/, `href="#${getId() ?? ""}-$1"`]],
+                    ["footnote_open", [/id="(fn\d+)"/, `id="${getId() ?? ""}-$1"`]],
+                    // prepend current file id to footnote refs
+                    ["footnote_ref", [/id="(fnref\d+)"/, `id="${getId() ?? ""}-$1"`]],
+                    ["footnote_anchor", [/href="#(fnref\d+)"/, `href="#${getId() ?? ""}-$1"`]]
+                ];
+                for (let replacement of rulesToReplace) {
+                    let prevRule = md.renderer.rules[replacement[0]];
+                    md.renderer.rules[replacement[0]] = (tokens, idx, options, env, self) => {
+                        return prevRule(tokens, idx, options, env, self).replace(...replacement[1]);
+                    };
+                }
 
                 let main = $("#main");
                 $(window).on("hashchange", display);
