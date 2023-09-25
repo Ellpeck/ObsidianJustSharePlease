@@ -48,8 +48,7 @@
                         ariaHidden: true
                     }),
                     // prepend current file id to the anchor permalink
-                    slugify: s => `${getId() ?? ""}-${encodeURIComponent(String(s).trim().toLowerCase().normalize("NFKD").replace(/\p{M}/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9_-]/g, "")
-                    )}`
+                    slugify: s => `${getId() ?? ""}-${encodeURIComponent(String(s).trim().toLowerCase().normalize("NFKD").replace(/\s+/g, "-").replace(/[^a-z0-9_-]/g, ""))}`
                 });
                 md.use(markdownitFootnote);
 
