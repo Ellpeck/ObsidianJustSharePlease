@@ -72,6 +72,7 @@
                 display();
 
                 function display() {
+                    main.html(`<div class="center-message"><p>Loading...</p></div>`);
                     let id = getId();
                     $.ajax({
                         method: "get",
@@ -86,7 +87,7 @@
                                     $(window).scrollTop(element.offset().top);
                             });
                         },
-                        error: (r, s, e) => main.html(`<div class="error"><p>Error loading shared note with id <code>${id}</code>: ${e}</p><p><a href="#">Home</a></p></div>`)
+                        error: (r, s, e) => main.html(`<div class="center-message"><p>Error loading shared note with id <code>${id}</code>: ${e}</p><p><a href="#">Home</a></p></div>`)
                     });
                 }
 
