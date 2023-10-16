@@ -4,6 +4,15 @@ test: yes
 
 This is a cool test note%%with an inline comment%%, my friends!
 
+Chemistry!
+$$
+\ce{ ^{227}_{90}Th+ }
+$$
+
+$$
+\ce{ 1/2H2O }
+$$
+
 %%
 BLOCK COMMENT
 %%
