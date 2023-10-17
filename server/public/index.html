@@ -69,7 +69,12 @@
                 }
 
                 let main = $("#main");
-                $(window).on("hashchange", display);
+                $(window).on("hashchange", e => {
+                    let oldUrl = e.originalEvent?.oldURL;
+                    let oldHash = oldUrl?.lastIndexOf("#");
+                    if (oldHash && getId(oldUrl.substring(oldHash)) !== getId())
+                        display();
+                });
                 display();
 
                 function display() {
@@ -92,8 +97,8 @@
                     });
                 }
 
-                function getId() {
-                    let hash = window.location.hash;
+                function getId(hash) {
+                    hash ||= window.location.hash;
                     if (!hash)
                         return undefined;
                     // hashes consist of the file id, a dash and then the permalink anchor name
