@@ -7,7 +7,7 @@
       "path": "Cool Test Note.md"
     }
   ],
-  "stripFrontmatter": true,
+  "stripFrontmatter": false,
   "includeNoteName": true,
   "unshareDeletedFiles": false,
   "autoUpdateShares": false

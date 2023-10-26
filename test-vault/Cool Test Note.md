@@ -1,7 +1,3 @@
----
-test: yes
----
-
 This is a cool test note%%with an inline comment%%, my friends!
 
 Chemistry!

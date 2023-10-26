@@ -227,15 +227,22 @@ export default class JustSharePleasePlugin extends Plugin {
         let text = await this.app.vault.cachedRead(file);
 
         // strip frontmatter
+        let frontmatter = /^(---\s*\n.*?\n---)\s*\n(.*)$/s;
         if (this.settings.stripFrontmatter)
-            text = text.replace(/^---\s*\n.*?\n---\s*\n(.*)$/s, "$1");
+            text = text.replace(frontmatter, "$2");
 
         // strip comments
         text = text.replace(/%%.*?%%/sg, "");
 
-        // include note name
-        if (this.settings.includeNoteName)
-            text = `# ${file.basename}\n\n${text}`;
+        // include note name (after frontmatter!)
+        if (this.settings.includeNoteName) {
+            let title = `# ${file.basename}\n\n`;
+            if (frontmatter.test(text)) {
+                text = text.replace(frontmatter, `$1\n\n${title}$2`);
+            } else {
+                text = title + text;
+            }
+        }
 
         // embed attachments directly
         let attachments = /!\[(.*)]\((.+)\)|!\[\[(.+)]]/g;
