@@ -242,7 +242,7 @@ export default class JustSharePleasePlugin extends Plugin {
         let match: RegExpExecArray;
         while ((match = attachments.exec(text)) != null) {
             let alt = match[1] ?? "";
-            let url = match[2] ?? match[3];
+            let url = decodeURI(match[2] ?? match[3]);
             if (url.startsWith("http"))
                 continue;
             try {

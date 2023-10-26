@@ -61,6 +61,13 @@ wikilink image!
 
 ![[Pasted image 20230816130420.png]]
 
+image but with spaces in the name!
+
+![](Pasted%20image%2020230816130420.png)
+
+online image!
+![](https://ellpeck.de/res/me.jpeg)
+
 nice
 
 [^1]: Normal footnote!
