@@ -30,12 +30,12 @@ export class JSPSettingsTab extends PluginSettingTab {
                 });
             });
         new Setting(this.containerEl)
-            .setName("Strip frontmatter")
-            .setDesc("Whether document frontmatter (also known as properties) should be removed from the uploaded share.")
+            .setName("Include file properties")
+            .setDesc("Whether the file properties of the shared note should be included in the share as visible frontmatter.")
             .addToggle(t => {
-                t.setValue(this.plugin.settings.stripFrontmatter);
+                t.setValue(!this.plugin.settings.stripFrontmatter);
                 t.onChange(async v => {
-                    this.plugin.settings.stripFrontmatter = v;
+                    this.plugin.settings.stripFrontmatter = !v;
                     await this.plugin.saveSettings();
                 });
             });
