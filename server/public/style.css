@@ -85,3 +85,9 @@ h1:hover .header-anchor, h2:hover .header-anchor, h3:hover .header-anchor, h4:ho
         background-color: #242424;
     }
 }
+
+@media print {
+    #footer {
+        position: relative;
+    }
+}
