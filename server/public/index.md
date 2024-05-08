@@ -67,13 +67,17 @@ The `index.html` and `style.css` files contain the site's styling and layout and
 
 Lastly, to get your server connected to the plugin, head to its settings and change the Just Share Please Server setting's value to your server's public URL.
 
+If you have any additional questions about the plugin or the self-hosting setup, feel free to join the Discord!
+
+[![Join the Discord server](https://ellpeck.de/res/discord-wide.png)](https://link.ellpeck.de/discordweb)
+
 ## About This Site
 The official Just Share Please site, [jsp.ellpeck.de](https://jsp.ellpeck.de), is run by Ellpeck, the creator of the plugin. It is hosted on a server in Germany, and connections to and from it are secured using SSL encryption, partly through LetsEncrypt and partly through Cloudflare SSL.
 
-If you have lost access to your shares due to your settings file being deleted or due to other reasons, and you want your shares to be deleted, please contact Ell at [me@ellpeck.de](mailto:me@ellpeck.de) or through his [Discord server](https://ellpeck.de/discord).
+If you have lost access to your shares due to your settings file being deleted or due to other reasons, and you want your shares to be deleted, please contact Ell at [me@ellpeck.de](mailto:me@ellpeck.de) or through the [Discord server](https://ellpeck.de/discord).
 
 Additionally, the site's source can be found [on GitHub](https://github.com/Ellpeck/ObsidianJustSharePlease/tree/main/server), and for information on privacy and ownership, see the [imprint](https://ellpeck.de/impressum/) and [privacy policy](https://ellpeck.de/privacy/). Ellpeck Games is not responsible for content published through Just Share Please.
 
 Lastly, if you like this plugin and website and want to support their development, you can do so through my website by clicking this fancy image!
 
-[![Support me (if you want), via Patreon, Ko-fi or GitHub Sponsors](https://ellpeck.de/res/generalsupport.png)](https://ellpeck.de/support)
+[![Support me (if you want), via Patreon, Ko-fi or GitHub Sponsors](https://ellpeck.de/res/generalsupport-wide.png)](https://ellpeck.de/support)
