@@ -16,7 +16,7 @@ jobs:
           echo "${{ secrets.ELLBOT_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
           rsync -rv --delete -e 'ssh -o "ProxyCommand cloudflared access ssh --hostname %h" -o "StrictHostKeyChecking=no"' server/public/ ellbot@ssh.ellpeck.de:/var/www/jsp/public
       - name: Purge Cloudflare cache
-        uses: https://github.com/NathanVaughn/actions-cloudflare-purge@v3.1.0
+        uses: NathanVaughn/actions-cloudflare-purge@v3.1.0
         with:
           cf_zone: ${{ secrets.CLOUDFLARE_ZONE }}
           cf_auth: ${{ secrets.CLOUDFLARE_TOKEN }}
