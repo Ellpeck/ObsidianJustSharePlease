@@ -11,9 +11,8 @@ jobs:
       # (though maybe if you self-host this, you should use a better way to deploy your site)
       - name: Deploy
         run: |
-          apt update && apt install -y rsync
           curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && sudo dpkg -i cloudflared.deb
-          echo "${{ secrets.ELLBOT_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+          mkdir ~/.ssh && echo "${{ secrets.ELLBOT_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
           rsync -rv --delete -e 'ssh -o "ProxyCommand cloudflared access ssh --hostname %h" -o "StrictHostKeyChecking=no"' server/public/ ellbot@ssh.ellpeck.de:/var/www/jsp/public
       - name: Purge Cloudflare cache
         uses: NathanVaughn/actions-cloudflare-purge@v3.1.0
