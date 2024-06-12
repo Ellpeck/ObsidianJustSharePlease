@@ -4,7 +4,7 @@ let md = markdownit({
     langPrefix: "hljs language-",
     highlight: (c, l) => {
         const language = hljs.getLanguage(l) ? l : "plaintext";
-        return hljs.highlight(c, {language}).value;
+        return hljs.highlight(c, { language }).value;
     }
 });
 md.use(texmath, {
@@ -20,6 +20,7 @@ md.use(markdownItAnchor, {
     slugify: s => `${getId() ?? ""}-${encodeURIComponent(String(s).trim().toLowerCase().normalize("NFKD").replace(/\s+/g, "-").replace(/[^a-z0-9_-]/g, ""))}`
 });
 md.use(markdownitFootnote);
+md.use(markdownitCheckbox);
 
 let rulesToReplace = [
     // prepend current file id to footnotes
