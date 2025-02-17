@@ -21,7 +21,7 @@ There are two ways to manage shared notes: you can open the context menu on a sh
 Both allow a set of actions, including sharing the link, updating the share and deleting the share. When updating the share, the link will stay intact, but it will be updated with the note's new content.
 
 ## How it Works (and Security)
-**To report a security vulnerability, please use GitHub's [private vulnerability reporting](https://github.com/Ellpeck/ObsidianJustSharePlease/security) feature or email [me@ellpeck.de](mailto:me@ellpeck.de).**
+**To report a security vulnerability, please use GitHub's [private vulnerability reporting](https://github.com/Ellpeck/ObsidianJustSharePlease/security) feature or email [jsp@ellpeck.de](mailto:jsp@ellpeck.de).**
 
 Just Share Please uses a simple [PHP backend](https://github.com/Ellpeck/ObsidianJustSharePlease/blob/main/server/public/share.php) that accepts requests for sharing, updating and deleting notes.
 
@@ -74,7 +74,7 @@ If you have any additional questions about the plugin or the self-hosting setup,
 ## About This Site
 The official Just Share Please site, [jsp.ellpeck.de](https://jsp.ellpeck.de), is run by Ellpeck, the creator of the plugin. It is hosted on a server in Germany, and connections to and from it are secured using SSL encryption, partly through LetsEncrypt and partly through Cloudflare SSL.
 
-If you have lost access to your shares due to your settings file being deleted or due to other reasons, and you want your shares to be deleted, please contact Ell at [me@ellpeck.de](mailto:me@ellpeck.de) or through the [Discord server](https://ellpeck.de/discord).
+If you have lost access to your shares due to your settings file being deleted or due to other reasons, and you want your shares to be deleted, please contact Ell at [jsp@ellpeck.de](mailto:jsp@ellpeck.de) or through the [Discord server](https://ellpeck.de/discord).
 
 Additionally, the site's source can be found [on GitHub](https://github.com/Ellpeck/ObsidianJustSharePlease/tree/main/server), and for information on privacy and ownership, see the [imprint](https://ellpeck.de/impressum/) and [privacy policy](https://ellpeck.de/privacy/). Ellpeck Games is not responsible for content published through Just Share Please.
 
