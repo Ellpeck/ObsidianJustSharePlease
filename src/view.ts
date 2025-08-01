@@ -16,7 +16,7 @@ export class JSPView extends ItemView {
         this.contentEl.empty();
         let content = this.contentEl.createDiv({cls: "just-share-please-view"});
         if (this.plugin.settings.shared.length > 0) {
-            for (let shared of this.plugin.settings.shared) {
+            for (let shared of [...this.plugin.settings.shared].reverse()) {
                 let file = this.plugin.app.vault.getAbstractFileByPath(shared.path) as TFile;
                 let div = content.createDiv({cls: "just-share-please-shared-item"});
                 div.createSpan({cls: "just-share-please-shared-name", text: removeExtension(shared.path).split(/[/\\]/g).pop()});
