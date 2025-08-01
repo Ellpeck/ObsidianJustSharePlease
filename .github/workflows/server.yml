@@ -14,6 +14,9 @@ jobs:
           curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && sudo dpkg -i cloudflared.deb
           mkdir ~/.ssh && echo "${{ secrets.ELLBOT_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
           rsync -rv --delete -e 'ssh -o "ProxyCommand cloudflared access ssh --hostname %h" -o "StrictHostKeyChecking=no"' server/public/ ellbot@ssh.ellpeck.de:/var/www/jsp/public
+        env:
+          TUNNEL_SERVICE_TOKEN_ID: ${{ secrets.TUNNEL_SERVICE_TOKEN_ID }}
+          TUNNEL_SERVICE_TOKEN_SECRET: ${{ secrets.TUNNEL_SERVICE_TOKEN_SECRET }}
       - name: Purge Cloudflare cache
         uses: NathanVaughn/actions-cloudflare-purge@v3.1.0
         with:
