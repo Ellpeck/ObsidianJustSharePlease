@@ -17,40 +17,39 @@ export class JSPView extends ItemView {
         let content = this.contentEl.createDiv({cls: "just-share-please-view"});
         if (this.plugin.settings.shared.length > 0) {
             for (let shared of this.plugin.settings.shared) {
-                let abstractFile = this.plugin.app.vault.getAbstractFileByPath(shared.path);
-                if (abstractFile instanceof TFile) {
-                    let file = abstractFile;
-                    let div = content.createDiv({cls: "just-share-please-shared-item"});
-                    div.createSpan({cls: "just-share-please-shared-name", text: removeExtension(shared.path).split(/[/\\]/g).pop()});
-                    if (file?.path.match(/[/\\]/))
-                        div.createSpan({cls: "just-share-please-shared-path", text: removeExtension(file.path)});
+                let file = this.plugin.app.vault.getAbstractFileByPath(shared.path) as TFile;
+                let div = content.createDiv({cls: "just-share-please-shared-item"});
+                div.createSpan({cls: "just-share-please-shared-name", text: removeExtension(shared.path).split(/[/\\]/g).pop()});
+                if (shared.path.match(/[/\\]/))
+                    div.createSpan({cls: "just-share-please-shared-path", text: removeExtension(shared.path)});
+                if (!file)
+                    div.createEl("em", {cls: "just-share-please-shared-path", text: "File does not exist anymore"});
+                new ButtonComponent(div)
+                    .setClass("clickable-icon")
+                    .setTooltip("Copy JSP link")
+                    .setIcon("link")
+                    .onClick(async () => this.plugin.copyShareLink(shared));
+                if (file) {
                     new ButtonComponent(div)
                         .setClass("clickable-icon")
-                        .setTooltip("Copy JSP link")
-                        .setIcon("link")
-                        .onClick(async () => this.plugin.copyShareLink(shared));
-                    if (file) {
-                        new ButtonComponent(div)
-                            .setClass("clickable-icon")
-                            .setTooltip("Open in Obsidian")
-                            .setIcon("edit")
-                            .onClick(async e => {
-                                let leaf = this.app.workspace.getLeaf(e.ctrlKey);
-                                await leaf.openFile(file);
-                                this.app.workspace.setActiveLeaf(leaf, {focus: true});
-                            });
-                        new ButtonComponent(div)
-                            .setClass("clickable-icon")
-                            .setTooltip("Update in JSP")
-                            .setIcon("share")
-                            .onClick(async () => this.plugin.updateFile(shared, file));
-                    }
+                        .setTooltip("Open in Obsidian")
+                        .setIcon("edit")
+                        .onClick(async e => {
+                            let leaf = this.app.workspace.getLeaf(e.ctrlKey);
+                            await leaf.openFile(file);
+                            this.app.workspace.setActiveLeaf(leaf, {focus: true});
+                        });
                     new ButtonComponent(div)
                         .setClass("clickable-icon")
-                        .setTooltip("Delete from JSP")
-                        .setIcon("trash")
-                        .onClick(async () => this.plugin.deleteFile(shared));
+                        .setTooltip("Update in JSP")
+                        .setIcon("share")
+                        .onClick(async () => this.plugin.updateFile(shared, file));
                 }
+                new ButtonComponent(div)
+                    .setClass("clickable-icon")
+                    .setTooltip("Delete from JSP")
+                    .setIcon("trash")
+                    .onClick(async () => this.plugin.deleteFile(shared));
             }
         } else {
             content.createSpan({text: "You have not shared any items yet."});
