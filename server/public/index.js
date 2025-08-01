@@ -4,7 +4,7 @@ let md = markdownit({
     langPrefix: "hljs language-",
     highlight: (c, l) => {
         const language = hljs.getLanguage(l) ? l : "plaintext";
-        return hljs.highlight(c, {language}).value;
+        return hljs.highlight(c, { language }).value;
     }
 });
 md.use(texmath, {
@@ -62,7 +62,7 @@ function display() {
                     $(window).scrollTop(element.offset().top);
             });
         },
-        error: (r, s, e) => main.html(`<div class="center-message"><p>Error loading shared note with id <code>${id}</code>: ${e?.message}</p><p><a href="#">Home</a></p></div>`)
+        error: (r, s, e) => main.html(`<div class="center-message"><p>Error loading shared note with id <code>${id}</code>: <code>${s} ${e}</code></p><p><a href="#">Home</a></p></div>`)
     });
 }
 
