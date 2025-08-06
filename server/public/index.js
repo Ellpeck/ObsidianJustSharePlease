@@ -4,7 +4,8 @@ let md = markdownit({
     langPrefix: "hljs language-",
     highlight: (c, l) => {
         const language = hljs.getLanguage(l) ? l : "plaintext";
-        return hljs.highlight(c, { language }).value;
+        console.log(`Detected language ${language} from ${l}`);
+        return hljs.highlight(c, {language}).value;
     }
 });
 md.use(texmath, {
