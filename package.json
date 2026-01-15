@@ -1,6 +1,6 @@
 {
     "name": "just-share-please",
-    "version": "0.1.6",
+    "version": "0.2.0",
     "description": "Quickly and easily share individual notes online using an anonymized link. Also easy to self-host!",
     "main": "main.js",
     "scripts": {
