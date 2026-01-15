@@ -1,4 +1,4 @@
-import {arrayBufferToBase64, Notice, Plugin, requestUrl, TFile} from "obsidian";
+import {arrayBufferToBase64, ButtonComponent, Notice, Plugin, requestUrl, TFile} from "obsidian";
 import {defaultSettings, JSPSettings, SharedItem} from "./settings";
 import {JSPSettingsTab} from "./settings-tab";
 import {JSPView} from "./view";
@@ -201,9 +201,7 @@ export default class JustSharePleasePlugin extends Plugin {
                 headers: {"Password": item.password}
             });
 
-            this.settings.shared.remove(item);
-            await this.saveSettings();
-            this.refreshAllViews();
+            await this.deleteLocalFileInfo(item);
 
             if (notice)
                 new Notice(`Successfully deleted ${name} from JSP`);
@@ -212,9 +210,22 @@ export default class JustSharePleasePlugin extends Plugin {
             new Notice(createFragment(f => {
                 f.createSpan({text: `There was an error deleting ${name}: `});
                 f.createEl("code", {text: e});
+                new ButtonComponent(f.createDiv({attr: {style: "padding-top: 1em;"}}))
+                    .setButtonText("Force-delete local information")
+                    .onClick(async _ => {
+                        await this.deleteLocalFileInfo(item);
+                        new Notice(`Successfully deleted local information for ${name}`);
+                    })
             }), 10000);
             console.log(e);
+            return false;
         }
+    }
+
+    async deleteLocalFileInfo(item: SharedItem): Promise<void> {
+        this.settings.shared.remove(item);
+        await this.saveSettings();
+        this.refreshAllViews();
     }
 
     async copyShareLink(item: SharedItem, notice = true): Promise<void> {
