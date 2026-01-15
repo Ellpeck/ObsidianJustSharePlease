@@ -1,15 +1,10 @@
 {
-  "url": "https://jsp.ellpeck.de",
+  "url": "http://localhost:8080",
   "shared": [
     {
-      "id": "7a4c6dde",
-      "password": "33cc5675fc172b601abe3663d2b67965",
+      "id": "8dc15d0b",
+      "password": "e662a3959c184982a87c7ac884ee3bc6",
       "path": "Cool Test Note.md"
-    },
-    {
-      "id": "1fcad20c",
-      "password": "daa04deb2769058a0f0d263297e6fe60",
-      "path": "dir/Cool Test Note 2.md"
     }
   ],
   "stripFrontmatter": false,

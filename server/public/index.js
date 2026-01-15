@@ -4,7 +4,6 @@ let md = markdownit({
     langPrefix: "hljs language-",
     highlight: (c, l) => {
         const language = hljs.getLanguage(l) ? l : "plaintext";
-        console.log(`Detected language ${language} from ${l}`);
         return hljs.highlight(c, {language}).value;
     }
 });
@@ -56,8 +55,17 @@ function display() {
         success: t => {
             main.html(DOMPurify.sanitize(md.render(t)));
 
-            // scroll to anchor
             $(() => {
+                // change title
+                let firstHeading = $("h1, h2, h3, h4, h5, h6").first();
+                if (firstHeading) {
+                    let heading = firstHeading.text().trim();
+                    if (heading.endsWith("#"))
+                        heading = heading.substring(0, heading.length - 1).trimEnd();
+                    window.document.title = heading;
+                }
+
+                // scroll to anchor
                 let element = $(window.location.hash);
                 if (element.length)
                     $(window).scrollTop(element.offset().top);
