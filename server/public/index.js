@@ -38,6 +38,9 @@ for (let replacement of rulesToReplace) {
 }
 
 let main = $("#main");
+let download = $("#download-markdown");
+let open = $("#open-in-obsidian");
+
 $(window).on("hashchange", e => {
     let oldUrl = e.originalEvent?.oldURL;
     let oldHash = oldUrl?.lastIndexOf("#");
@@ -69,6 +72,11 @@ function display() {
                 let element = $(window.location.hash);
                 if (element.length)
                     $(window).scrollTop(element.offset().top);
+
+                // set download links
+                download.attr("download", `${window.document.title}.md`);
+                download.attr("href", `data:text/plain;charset=utf-8,${encodeURIComponent(t)}`);
+                open.attr("href", `obsidian://new?name=${encodeURI(window.document.title)}&content=${encodeURIComponent(t)}`);
             });
         },
         error: (r, s, e) => main.html(`<div class="center-message"><p>Error loading shared note with id <code>${id}</code>: <code>${s} ${e}</code></p><p><a href="#">Home</a></p></div>`)
