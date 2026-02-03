@@ -101,14 +101,14 @@ function loadNoteFooter(id) {
         // Add timestamp if available
         if (meta && meta.created) {
             let date = new Date(meta.created * 1000);
-            let formatted = date.toLocaleDateString("fi-FI", {
+            let formatted = date.toLocaleDateString(undefined, {
                 day: "numeric",
                 month: "numeric",
                 year: "numeric",
                 hour: "2-digit",
                 minute: "2-digit"
             });
-            footerHtml += `<p class="note-timestamp">Jaettu: ${formatted}</p>`;
+            footerHtml += `<p class="note-timestamp">Shared: ${formatted}</p>`;
         }
 
         // Add quote if available
