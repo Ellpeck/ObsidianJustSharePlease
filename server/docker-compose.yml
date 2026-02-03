@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data:/var/www/data
+      - ./quotes:/var/www/quotes
+    restart: unless-stopped

@@ -1,0 +1,3 @@
+data/
+*.md
+!public/*.md
