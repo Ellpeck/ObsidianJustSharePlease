@@ -3,7 +3,9 @@
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
         // Route to appropriate handler
-        if (isset($_GET["meta"])) {
+        if (isset($_GET["quote"])) {
+            handle_quote();
+        } elseif (isset($_GET["meta"])) {
             handle_meta();
         } else {
             handle_get();
@@ -32,6 +34,29 @@ function handle_get(): void {
         return;
     }
     echo $content;
+}
+
+function handle_quote(): void {
+    header("Content-Type: application/json");
+    $quotes_file = dirname(getcwd()) . "/quotes/quotes.csv";
+    if (!file_exists($quotes_file)) {
+        echo json_encode(["quote" => null, "source" => null]);
+        return;
+    }
+
+    $lines = file($quotes_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if (empty($lines)) {
+        echo json_encode(["quote" => null, "source" => null]);
+        return;
+    }
+
+    $line = $lines[array_rand($lines)];
+    // Parse CSV format: "Quote";"Source"
+    $parts = str_getcsv($line, ";");
+    echo json_encode([
+        "quote" => $parts[0] ?? null,
+        "source" => $parts[1] ?? null
+    ]);
 }
 
 function handle_meta(): void {

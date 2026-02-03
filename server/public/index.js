@@ -91,27 +91,37 @@ function display() {
 }
 
 function loadNoteFooter(id) {
-    // Fetch note metadata
-    $.ajax({
-        method: "get",
-        url: `share.php?meta&id=${id}`,
-        success: meta => {
-            if (meta && meta.created) {
-                let date = new Date(meta.created * 1000);
-                let formatted = date.toLocaleDateString("fi-FI", {
-                    day: "numeric",
-                    month: "numeric",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit"
-                });
-                let footerHtml = '<div class="note-footer-divider"></div>';
-                footerHtml += `<p class="note-timestamp">Jaettu: ${formatted}</p>`;
-                noteFooter.html(footerHtml);
+    // Fetch meta and quote in parallel
+    Promise.all([
+        $.ajax({ method: "get", url: `share.php?meta&id=${id}` }).catch(() => null),
+        $.ajax({ method: "get", url: "share.php?quote" }).catch(() => null)
+    ]).then(([meta, quote]) => {
+        let footerHtml = '';
+
+        // Add timestamp if available
+        if (meta && meta.created) {
+            let date = new Date(meta.created * 1000);
+            let formatted = date.toLocaleDateString("fi-FI", {
+                day: "numeric",
+                month: "numeric",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+            footerHtml += `<p class="note-timestamp">Jaettu: ${formatted}</p>`;
+        }
+
+        // Add quote if available
+        if (quote && quote.quote) {
+            footerHtml += `<p class="note-quote">"${quote.quote}"</p>`;
+            if (quote.source) {
+                footerHtml += `<p class="note-quote-source">— <em>${quote.source}</em></p>`;
             }
-        },
-        error: () => {
-            // Silently fail if metadata not available
+        }
+
+        // Only show footer if there's content
+        if (footerHtml) {
+            noteFooter.html('<div class="note-footer-divider"></div>' + footerHtml);
         }
     });
 }
