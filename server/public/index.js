@@ -98,7 +98,7 @@ function loadNoteFooter(id) {
         success: meta => {
             if (meta && meta.created) {
                 let date = new Date(meta.created * 1000);
-                let formatted = date.toLocaleDateString("fi-FI", {
+                let formatted = date.toLocaleDateString(undefined, {
                     day: "numeric",
                     month: "numeric",
                     year: "numeric",
@@ -106,7 +106,7 @@ function loadNoteFooter(id) {
                     minute: "2-digit"
                 });
                 let footerHtml = '<div class="note-footer-divider"></div>';
-                footerHtml += `<p class="note-timestamp">Jaettu: ${formatted}</p>`;
+                footerHtml += `<p class="note-timestamp">Shared: ${formatted}</p>`;
                 noteFooter.html(footerHtml);
             }
         },
