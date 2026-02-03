@@ -2,7 +2,12 @@
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
-        handle_get();
+        // Route to appropriate handler
+        if (isset($_GET["meta"])) {
+            handle_meta();
+        } else {
+            handle_get();
+        }
         break;
     case "POST":
         handle_post();
@@ -29,6 +34,30 @@ function handle_get(): void {
     echo $content;
 }
 
+function handle_meta(): void {
+    header("Content-Type: application/json");
+    parse_str($_SERVER["QUERY_STRING"], $query);
+    if (!isset($query["id"])) {
+        http_response_code(400);
+        echo json_encode(["error" => "No id"]);
+        return;
+    }
+
+    $meta_path = get_meta_path($query["id"]);
+    if (!file_exists($meta_path)) {
+        http_response_code(404);
+        echo json_encode(["error" => "Not found"]);
+        return;
+    }
+
+    $meta = json_decode(file_get_contents($meta_path), true);
+    // Return only public info (not password)
+    echo json_encode([
+        "id" => $meta["id"],
+        "created" => $meta["created"] ?? null
+    ]);
+}
+
 function handle_post(): void {
     $content = get_markdown_content();
     if ($content === null)
@@ -46,7 +75,8 @@ function handle_post(): void {
 
     $meta = json_encode([
         "id" => $id,
-        "password" => $password
+        "password" => $password,
+        "created" => time()
     ]);
 
     // store markdown and metadata in data path

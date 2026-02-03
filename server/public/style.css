@@ -65,6 +65,26 @@ h1:hover .header-anchor, h2:hover .header-anchor, h3:hover .header-anchor, h4:ho
     transform: translate(-50%, -60%);
 }
 
+#note-footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.note-footer-divider {
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #9275f0, transparent);
+    margin: 0 auto 20px;
+}
+
+.note-timestamp {
+    margin: 0;
+    font-size: 0.85em;
+}
+
 #footer {
     position: absolute;
     left: 0;
@@ -132,6 +152,10 @@ input[type=checkbox]:checked:after {
 
     input[type=checkbox]:checked:after {
         background-color: #1e1e1e;
+    }
+
+    #note-footer {
+        color: #999;
     }
 }
 

@@ -38,6 +38,7 @@ for (let replacement of rulesToReplace) {
 }
 
 let main = $("#main");
+let noteFooter = $("#note-footer");
 let download = $("#download-markdown");
 let open = $("#open-in-obsidian");
 
@@ -51,6 +52,7 @@ display();
 
 function display() {
     main.html(`<div class="center-message"><p>Loading...</p></div>`);
+    noteFooter.html("");
     let id = getId();
     $.ajax({
         method: "get",
@@ -77,9 +79,40 @@ function display() {
                 download.attr("download", `${window.document.title}.md`);
                 download.attr("href", `data:text/plain;charset=utf-8,${encodeURIComponent(t)}`);
                 open.attr("href", `obsidian://new?name=${encodeURI(window.document.title)}&content=${encodeURIComponent(t)}`);
+
+                // load note footer with publication time (only for shared notes)
+                if (id) {
+                    loadNoteFooter(id);
+                }
             });
         },
         error: (r, s, e) => main.html(`<div class="center-message"><p>Error loading shared note with id <code>${id}</code>: <code>${s} ${e}</code></p><p><a href="#">Home</a></p></div>`)
+    });
+}
+
+function loadNoteFooter(id) {
+    // Fetch note metadata
+    $.ajax({
+        method: "get",
+        url: `share.php?meta&id=${id}`,
+        success: meta => {
+            if (meta && meta.created) {
+                let date = new Date(meta.created * 1000);
+                let formatted = date.toLocaleDateString("fi-FI", {
+                    day: "numeric",
+                    month: "numeric",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+                let footerHtml = '<div class="note-footer-divider"></div>';
+                footerHtml += `<p class="note-timestamp">Jaettu: ${formatted}</p>`;
+                noteFooter.html(footerHtml);
+            }
+        },
+        error: () => {
+            // Silently fail if metadata not available
+        }
     });
 }
 
