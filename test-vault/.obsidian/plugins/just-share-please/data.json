@@ -5,6 +5,11 @@
       "id": "8dc15d0b",
       "password": "e662a3959c184982a87c7ac884ee3bc6",
       "path": "Cool Test Note.md"
+    },
+    {
+      "id": "84f6aea3",
+      "password": "d0c18bc01cae3bbe81ec4573d5558e5f",
+      "path": "Even cooler note.md"
     }
   ],
   "stripFrontmatter": false,

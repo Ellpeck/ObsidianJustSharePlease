@@ -155,6 +155,7 @@ export default class JustSharePleasePlugin extends Plugin {
             let shared = response.json as SharedItem;
             shared.path = file.path;
 
+            await this.loadSettings();
             this.settings.shared.push(shared);
             await this.saveSettings();
             this.refreshAllViews();
@@ -225,6 +226,7 @@ export default class JustSharePleasePlugin extends Plugin {
     }
 
     async deleteLocalFileInfo(item: SharedItem): Promise<void> {
+        await this.loadSettings();
         this.settings.shared.remove(item);
         await this.saveSettings();
         this.refreshAllViews();
