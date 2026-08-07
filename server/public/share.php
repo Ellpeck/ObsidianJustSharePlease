@@ -83,7 +83,7 @@ function handle_delete(): void {
 
 function check_password(string $id, string $password): bool {
     $meta = json_decode(file_get_contents(get_meta_path($id)), true);
-    if ($password != $meta["password"]) {
+    if (!hash_equals($meta["password"], $password)) {
         http_response_code(401);
         echo "Unauthorized";
         return false;
