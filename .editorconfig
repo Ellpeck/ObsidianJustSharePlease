@@ -10,3 +10,4 @@ tab_width = 4
 
 [{*.yml,*.yaml}]
 indent_size = 2
+tab_width = 2
