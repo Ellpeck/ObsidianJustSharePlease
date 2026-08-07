@@ -1,11 +1,11 @@
 {
-    "id": "just-share-please",
-    "name": "Just Share Please",
-    "version": "0.2.0",
-    "minAppVersion": "1.11.0",
-    "description": "Quickly and easily share individual notes online using an anonymized link. Also easy to self-host!",
-    "author": "Ellpeck",
-    "authorUrl": "https://ellpeck.de",
-    "fundingUrl": "https://ellpeck.de/support",
-    "isDesktopOnly": false
+	"id": "just-share-please",
+	"name": "Just Share Please",
+	"version": "0.3.0",
+	"minAppVersion": "1.11.0",
+	"description": "Quickly and easily share individual notes online using an anonymized link. Also easy to self-host!",
+	"author": "Ellpeck",
+	"authorUrl": "https://ellpeck.de",
+	"fundingUrl": "https://ellpeck.de/support",
+	"isDesktopOnly": false
 }
