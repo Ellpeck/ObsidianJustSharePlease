@@ -33,7 +33,6 @@ export default defineConfig(
     ...obsidianmd.configs.recommended,
     {
         rules: {
-            "eslint-comments/no-restricted-disable": "off",
             "obsidianmd/ui/sentence-case": ["warn", {
                 acronyms: ["JSP"],
                 brands: ["Just Share Please", "Obsidian"]

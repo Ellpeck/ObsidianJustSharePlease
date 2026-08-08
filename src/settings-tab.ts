@@ -20,9 +20,8 @@ export class JSPSettingsTab extends PluginSettingTab {
             .setDesc(createFragment(f => {
                 f.createSpan({ text: "URL for the Just Share Please server to upload to and share links for. Defaults to the official site " });
                 f.createEl("a", { text: "jsp.ellpeck.de", href: defaultSettings.url });
-                f.createSpan({ text: ". For more info on self-hosting, see " });
-                // eslint-disable-next-line obsidianmd/ui/sentence-case -- partial line
-                f.createEl("a", { text: "the official site", href: "https://jsp.ellpeck.de/#-self-hosting" });
+                f.createSpan({ text: ". For more info on self-hosting, see the " });
+                f.createEl("a", { text: "JSP documentation", href: "https://jsp.ellpeck.de/#-self-hosting" });
                 f.createSpan({ text: "." });
             }))
             .addText(t => {
