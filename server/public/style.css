@@ -47,8 +47,12 @@ h1:hover .header-anchor, h2:hover .header-anchor, h3:hover .header-anchor, h4:ho
 }
 
 
-.hljs {
+.hljs, p code {
     background-color: #fafafa;
+}
+
+p code {
+    padding: 0.15em 0.3em;
 }
 
 .content {
@@ -123,10 +127,10 @@ input[type=checkbox]:checked:after {
 @media (prefers-color-scheme: dark) {
     body {
         color: #dadada;
-        background-color: #1e1e1e;
+        background-color: #1c1c1c;
     }
 
-    .hljs {
+    .hljs, p code {
         background-color: #242424;
     }
 
