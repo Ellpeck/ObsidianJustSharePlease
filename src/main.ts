@@ -135,6 +135,7 @@ export default class JustSharePleasePlugin extends Plugin {
 
     async onExternalSettingsChange() {
         await this.loadSettings();
+        this.refreshAllViews();
     }
 
     async loadSettings(): Promise<void> {
