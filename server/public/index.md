@@ -40,7 +40,7 @@ If you want to self-host Just Share Please for you and your friends' notes, you 
 
 The server contains two main directories: `public` and `data`. The `public` directory contains the files that should be served to users by your web server, whereas the `data` directory should be accessible to your web server itself, but **not** to website users. The `data` directory is where note data will be stored.
 
-As an example, the official site is hosted using the official [PHP Docker image](https://hub.docker.com/_/php) with a Dockerfile similar to this minimal example, which can be run using:
+As an example, the official site is hosted using the official [PHP Docker image](https://hub.docker.com/_/php) with a Dockerfile similar to this minimal example:
 ```Dockerfile
 FROM php:8.5-apache-trixie
 COPY server/public/ /var/www/html
